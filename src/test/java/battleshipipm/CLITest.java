@@ -1,22 +1,22 @@
-import org.junit.Test;
+package battleshipipm;
 
+import org.junit.Test;
 import java.io.*;
 
 import static junit.framework.TestCase.assertEquals;
 import static junit.framework.TestCase.assertTrue;
-import static org.junit.Assert.*;
-import static org.mockito.Mockito.*;
 
 
 public class CLITest {
 
     @Test
-    public void start() throws IOException {
+    public void welcome() throws IOException {
 
         ByteArrayOutputStream bo = new ByteArrayOutputStream();
         System.setOut(new PrintStream(bo));
 
-        CLI.start();
+        CLI testCLI = new CLI();
+        testCLI.welcome();
 
         bo.flush();
         String inputLines = new String(bo.toByteArray());
@@ -25,11 +25,12 @@ public class CLITest {
     }
 
     @Test
-    public void requestPlayerName() throws IOException {
+    public void getPlayerName() throws IOException {
         ByteArrayOutputStream bo = new ByteArrayOutputStream();
         System.setOut(new PrintStream(bo));
 
-        CLI.requestPlayerName();
+        CLI testCLI = new CLI();
+        testCLI.getPlayerName();
 
         bo.flush();
         String inputLines = new String(bo.toByteArray());
@@ -44,7 +45,8 @@ public class CLITest {
         InputStream input = new ByteArrayInputStream(data);
         System.setIn(input);
 
-        String testResult = CLI.getPlayerNameInput();
+        CLI testCLI = new CLI();
+        String testResult = testCLI.getPlayerNameInput();
 
         assertEquals("Test", testResult);
     }
@@ -56,8 +58,10 @@ public class CLITest {
         InputStream input = new ByteArrayInputStream(data);
         System.setIn(input);
 
-        String testResult = CLI.getPlayerNameInput();
+        CLI testCLI = new CLI();
+        String testResult = testCLI.getPlayerNameInput();
 
-        assertEquals("Name cannot be blank please try again.", testResult);
+        assertEquals("", testResult);
     }
+
 }
