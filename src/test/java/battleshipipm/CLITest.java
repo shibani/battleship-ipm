@@ -5,6 +5,7 @@ import java.io.*;
 
 import static junit.framework.TestCase.assertEquals;
 import static junit.framework.TestCase.assertTrue;
+import static org.mockito.Mockito.*;
 
 
 public class CLITest {
@@ -16,7 +17,7 @@ public class CLITest {
         System.setOut(new PrintStream(bo));
 
         CLI testCLI = new CLI();
-        testCLI.welcome();
+        testCLI.welcome("Welcome to Battleship");
 
         bo.flush();
         String inputLines = new String(bo.toByteArray());
@@ -30,12 +31,12 @@ public class CLITest {
         System.setOut(new PrintStream(bo));
 
         CLI testCLI = new CLI();
-        testCLI.getPlayerName();
+        testCLI.getPlayerName("Enter your Player Name:");
 
         bo.flush();
         String inputLines = new String(bo.toByteArray());
 
-        assertTrue(inputLines.contains("Enter your Player Name:\n(Name should contain only numbers and alphabets. Name should not be empty)"));
+        assertTrue(inputLines.contains("Enter your Player Name:"));
     }
 
     @Test
@@ -46,7 +47,7 @@ public class CLITest {
         System.setIn(input);
 
         CLI testCLI = new CLI();
-        String testResult = testCLI.getPlayerNameInput();
+        String testResult = testCLI.getPlayerNameInput("test");
 
         assertEquals("Test", testResult);
     }
@@ -59,9 +60,46 @@ public class CLITest {
         System.setIn(input);
 
         CLI testCLI = new CLI();
-        String testResult = testCLI.getPlayerNameInput();
+        String testResult = testCLI.getPlayerNameInput("test");
 
         assertEquals("", testResult);
     }
 
+    @Test
+    public void printString() throws IOException {
+        ByteArrayOutputStream bo = new ByteArrayOutputStream();
+        System.setOut(new PrintStream(bo));
+
+        String str = "test";
+        CLI testCLI = new CLI();
+        testCLI.printString(str);
+
+        bo.flush();
+        String inputLines = new String(bo.toByteArray());
+
+        assertTrue(inputLines.contains("test"));
+    }
+
+    @Test
+    public void setup() throws IOException {
+        byte[] data = "test".getBytes();
+        InputStream input = new ByteArrayInputStream(data);
+        System.setIn(input);
+
+        CLI mockedCli = mock(CLI.class);
+        App mockedApp = mock(App.class);
+
+        mockedApp.setup();
+        //String testResult = testCLI.getPlayerNameInput("another test");
+
+        verify(mockedCli).setup();
+    }
+
+    /*@Test
+    public void setup1() throws IOException {
+        CLI mockedCLI = mock(CLI.class);
+
+        mockedCLI.setup();
+        verify(mockedCLI, times(1)).getPlayerName("test");
+    }*/
 }
