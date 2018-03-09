@@ -80,7 +80,7 @@ public class CLITest {
         assertTrue(inputLines.contains("test"));
     }
 
-    @Test
+    /*@Test
     public void setup() throws IOException {
         byte[] data = "test".getBytes();
         InputStream input = new ByteArrayInputStream(data);
@@ -93,7 +93,7 @@ public class CLITest {
         //String testResult = testCLI.getPlayerNameInput("another test");
 
         verify(mockedCli).setup();
-    }
+    }*/
 
     /*@Test
     public void setup1() throws IOException {
