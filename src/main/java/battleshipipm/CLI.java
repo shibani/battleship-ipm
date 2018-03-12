@@ -15,14 +15,10 @@ public class CLI {
             "(Name should contain only numbers and alphabets. Name should not be empty)\n";
 
 
-    public void setup() throws IOException {
+    public String setup() throws IOException {
         welcome(this.welcome);
-        try {
-            getPlayerName(this.getPlayerName);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        getPlayerNameInput(getPlayerName);
+        getPlayerName(this.getPlayerName);
+        return getPlayerNameInput(this.getPlayerName);
     }
 
     public void welcome(String str){
@@ -33,7 +29,7 @@ public class CLI {
         System.out.print(message);
     }
 
-    public void getPlayerName(String str) throws IOException {
+    public void getPlayerName(String str) {
         this.printString(str);
     }
 
@@ -42,15 +38,14 @@ public class CLI {
         String input = br.readLine();
 
         String output = "";
-
         try {
             output = input.trim();
             if (output.length() > 1){
-                System.out.print("You selected " + output);
+                System.out.print("You selected " + output + "\n");
             } else {
                 System.out.print("Name cannot be empty. Please try again.\n");
                 getPlayerName(str);
-                getPlayerNameInput(getPlayerName);
+                getPlayerNameInput(str);
             }
         } catch(NullPointerException e) {
             System.out.print("Caught NullPointerException");

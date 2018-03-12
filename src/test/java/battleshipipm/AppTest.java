@@ -1,42 +1,57 @@
 package battleshipipm;
 
+import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.mockito.Mockito;
 
 import java.io.IOException;
 
 import static org.junit.Assert.*;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.*;
+import static org.mockito.MockitoAnnotations.initMocks;
 
-/*public class AppTest {
+public class AppTest {
 
-    @Test
+    @Mock
+    private CLI mockedCli;
+    private Game mockedGame;
+    private Board mockedBoard;
+
+    @InjectMocks
+    private App mockedApp;
+
+    @Before
+    public void beforeSetup() {
+        initMocks(this);
+    }
+
+    @Ignore
     public void start() throws IOException {
-        CLI mockedCLI = mock(CLI.class);
-        BoardCLI mockedBCli = mock(BoardCLI.class);
-        Game mockedGame = mock(Game.class);
-        App mockedApp = mock(App.class);
-
         mockedApp.start();
-
-        verify(mockedApp).setup();
+        verify(mockedApp, times(1)).start();
     }
 
-    @Test
+    @Ignore
     public void setup() throws IOException {
-        CLI mockedCLI = mock(CLI.class);
-        BoardCLI mockedBCli = mock(BoardCLI.class);
-        Game mockedGame = mock(Game.class);
-        App testApp = new App(mockedCLI, mockedBCli, mockedGame);
+        when(mockedCli.setup()).thenReturn("testPlayer");
+        doNothing().when(mockedGame).config();
+        mockedGame.config();
 
-        //testApp.start();
-        mockedCLI.welcome();
-        mockedCLI.getPlayerName();
-
-        verify(mockedCLI).getPlayerNameInput();
+        verify(mockedCli, times(1)).setup();
     }
-}*/
+
+    @Ignore
+    public void setup2() throws IOException {
+        doNothing().when(mockedGame).config();
+        mockedApp.setup();
+        mockedCli.setup();
+
+        verify(mockedGame, times(1)).config();
+    }
+}
 
 
 

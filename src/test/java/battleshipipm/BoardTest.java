@@ -23,6 +23,6 @@ public class BoardTest {
         testBoard.setTotalPositions(10);
         testBoard.setPositions();
 
-        assertEquals(" ", testBoard.getPositions().get(5));
+        assertEquals(" ", testBoard.getPositions().get(9));
     }
 }

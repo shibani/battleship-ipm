@@ -1,11 +1,21 @@
 package battleshipipm;
 
+import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.Mockito;
+import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.stubbing.OngoingStubbing;
+
 import java.io.*;
 
 import static junit.framework.TestCase.assertEquals;
 import static junit.framework.TestCase.assertTrue;
 import static org.mockito.Mockito.*;
+import static org.mockito.MockitoAnnotations.initMocks;
 
 
 public class CLITest {
@@ -53,19 +63,6 @@ public class CLITest {
     }
 
     @Test
-    public void getPlayerNameInput1() throws IOException {
-
-        byte[] data = "".getBytes();
-        InputStream input = new ByteArrayInputStream(data);
-        System.setIn(input);
-
-        CLI testCLI = new CLI();
-        String testResult = testCLI.getPlayerNameInput("test");
-
-        assertEquals("", testResult);
-    }
-
-    @Test
     public void printString() throws IOException {
         ByteArrayOutputStream bo = new ByteArrayOutputStream();
         System.setOut(new PrintStream(bo));
@@ -80,26 +77,20 @@ public class CLITest {
         assertTrue(inputLines.contains("test"));
     }
 
-    /*@Test
-    public void setup() throws IOException {
-        byte[] data = "test".getBytes();
-        InputStream input = new ByteArrayInputStream(data);
-        System.setIn(input);
+    @Mock
+    private CLI mockedCli;
+    private App mockedApp;
 
-        CLI mockedCli = mock(CLI.class);
-        App mockedApp = mock(App.class);
 
-        mockedApp.setup();
-        //String testResult = testCLI.getPlayerNameInput("another test");
+    @Before
+    public void beforeSetup() {
+        initMocks(this);
+    }
 
-        verify(mockedCli).setup();
-    }*/
+    @Test
+    public void setup2() throws IOException {
+        when(mockedCli.setup()).thenReturn("testPlayer");
 
-    /*@Test
-    public void setup1() throws IOException {
-        CLI mockedCLI = mock(CLI.class);
-
-        mockedCLI.setup();
-        verify(mockedCLI, times(1)).getPlayerName("test");
-    }*/
+        assertEquals("testPlayer", mockedCli.setup());
+    }
 }

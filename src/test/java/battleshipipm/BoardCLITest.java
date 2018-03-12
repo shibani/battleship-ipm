@@ -12,17 +12,18 @@ import static org.junit.Assert.*;
 public class BoardCLITest {
 
     @Test
-    public void printBoard() throws IOException {
+    public void print() throws IOException {
         Board board = new Board();
         BoardCLI bcli = new BoardCLI();
         ByteArrayOutputStream bo = new ByteArrayOutputStream();
         System.setOut(new PrintStream(bo));
 
-        bcli.printBoard(board);
+        bcli.print(board);
 
         bo.flush();
         String inputLines = new String(bo.toByteArray());
 
         assertTrue(inputLines.contains(" +=====+=====+=====+=====+=====+=====+=====+=====+=====+=====+ "));
     }
+
 }
