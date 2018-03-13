@@ -12,7 +12,7 @@ public class Game {
         this.boardCli = null;
     }
 
-    private void setBoard(int size){
+    public void setBoard(int size){
         this.board = new Board();
         this.board.setTotalPositions(size);
         this.board.setPositions();
@@ -22,7 +22,7 @@ public class Game {
         return board;
     }
 
-    private void setBoardCli(){
+    public void setBoardCli(){
         this.boardCli = new BoardCLI();
     }
 
@@ -33,6 +33,8 @@ public class Game {
     public void config(){
         this.setBoard(100);
         this.setBoardCli();
-        this.getBoardCli().print(this.getBoard());
+        this.board.setShips();
+        //this.getBoardCli().print(this.getBoard());
+        this.getBoardCli().displayShips(this.getBoard());
     }
 }

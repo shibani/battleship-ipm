@@ -26,4 +26,23 @@ public class BoardCLITest {
         assertTrue(inputLines.contains(" +=====+=====+=====+=====+=====+=====+=====+=====+=====+=====+ "));
     }
 
+    @Test
+    public void displayShips() throws IOException {
+        Board board = new Board();
+        BoardCLI bcli = new BoardCLI();
+
+        board.setTotalPositions(100);
+        board.setPositions();
+        board.setShips();
+
+        ByteArrayOutputStream bo = new ByteArrayOutputStream();
+        System.setOut(new PrintStream(bo));
+
+        bcli.displayShips(board);
+
+        bo.flush();
+        String inputLines = new String(bo.toByteArray());
+
+        assertTrue(inputLines.contains("|  S  |  S  |  S  |"));
+    }
 }

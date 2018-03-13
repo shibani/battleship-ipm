@@ -81,14 +81,13 @@ public class CLITest {
     private CLI mockedCli;
     private App mockedApp;
 
-
     @Before
     public void beforeSetup() {
         initMocks(this);
     }
 
     @Test
-    public void setup2() throws IOException {
+    public void setup() throws IOException {
         when(mockedCli.setup()).thenReturn("testPlayer");
 
         assertEquals("testPlayer", mockedCli.setup());
