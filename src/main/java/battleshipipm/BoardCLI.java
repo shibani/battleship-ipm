@@ -51,7 +51,8 @@ public class BoardCLI {
         while(i < board.getTotalPositions()) {
             System.out.print(" ");
             if(board.getFilledPositions().contains(i)){
-                System.out.print("S");
+                int index = board.getFilledPositions().indexOf(i);
+                System.out.print(board.getShipMarkers().get(index));
             } else {
                 System.out.print(positions.get(i));
             }

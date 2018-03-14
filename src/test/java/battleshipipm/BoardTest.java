@@ -98,4 +98,33 @@ public class BoardTest {
 
         assertEquals(17, board.getFilledPositions().size());
     }
+
+    @Test
+    public void getShipMarkers() {
+        final Board board = new Board();
+        board.setTotalPositions(100);
+        board.setShips();
+
+
+    }
+
+    @Test
+    public void setRowSize() throws NoSuchFieldException, IllegalAccessException {
+        final Board board = new Board();
+        board.setTotalPositions(100);
+        final Field field = board.getClass().getDeclaredField("rowSize");
+        field.setAccessible(true);
+        board.setRowSize();
+
+        assertEquals(10, field.get(board));
+    }
+
+    @Test
+    public void getRowSize() {
+        final Board board = new Board();
+        board.setTotalPositions(100);
+        board.setRowSize();
+
+        assertEquals(10, board.getRowSize());
+    }
 }
