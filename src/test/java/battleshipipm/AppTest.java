@@ -3,6 +3,7 @@ package battleshipipm;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
+
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
@@ -15,41 +16,38 @@ import static org.mockito.MockitoAnnotations.initMocks;
 
 public class AppTest {
 
-    @Mock
-    private CLI mockedCli;
-    private Game mockedGame;
-    private Board mockedBoard;
-
-    @InjectMocks
-    private App mockedApp;
-
-    @Before
-    public void beforeSetup() {
-        initMocks(this);
-    }
-
     @Ignore
     public void start() throws IOException {
-        mockedApp.start();
-        verify(mockedApp, times(1)).start();
+        Game testGame = mock(Game.class);
+        CLI testCli = mock(CLI.class);
+        //App testApp = mock(App.class);
+
+        App testApp = new App(testCli, testGame);
+        App.start();
+
+        verify(testApp, times(1)).setup();
     }
 
-    @Ignore
+    @Test
     public void setup() throws IOException {
-        when(mockedCli.setup()).thenReturn("testPlayer");
-        doNothing().when(mockedGame).config();
-        mockedGame.config();
+        Game testGame = mock(Game.class);
+        CLI testCli = mock(CLI.class);
 
-        verify(mockedCli, times(1)).setup();
+        App testApp = new App(testCli, testGame);
+
+        testApp.setup();
+        verify(testCli, times(1)).setup();
     }
 
-    @Ignore
+    @Test
     public void setup2() throws IOException {
-        doNothing().when(mockedGame).config();
-        mockedApp.setup();
-        mockedCli.setup();
+        Game testGame = mock(Game.class);
+        CLI testCli = mock(CLI.class);
 
-        verify(mockedGame, times(1)).config();
+        App testApp = new App(testCli, testGame);
+        testApp.setup();
+
+        verify(testGame, times(1)).config();
     }
 }
 

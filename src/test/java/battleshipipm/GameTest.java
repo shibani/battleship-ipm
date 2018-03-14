@@ -52,7 +52,7 @@ public class GameTest {
     }
 
     @Test
-    public void getBoardCLI() throws NoSuchFieldException, IllegalAccessException {
+    public void getBoardCli() throws NoSuchFieldException, IllegalAccessException {
         final Game testGame = new Game();
         final BoardCLI testBoardCLI = new BoardCLI();
 
