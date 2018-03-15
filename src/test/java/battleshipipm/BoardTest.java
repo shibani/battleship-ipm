@@ -105,7 +105,7 @@ public class BoardTest {
         board.setTotalPositions(100);
         board.setShips();
 
-
+        assertEquals(17, board.getShipMarkers().size());
     }
 
     @Test

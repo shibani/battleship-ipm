@@ -45,9 +45,18 @@ public class AppTest {
         CLI testCli = mock(CLI.class);
 
         App testApp = new App(testCli, testGame);
+        when(testCli.setup()).thenReturn("Player1");
         testApp.setup();
 
-        verify(testGame, times(1)).config();
+        verify(testGame, times(1)).config(any(String.class));
+    }
+
+    @Test
+    public void gameLoop() {
+    }
+
+    @Test
+    public void gameOver() {
     }
 }
 

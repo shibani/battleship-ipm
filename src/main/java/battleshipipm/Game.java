@@ -6,6 +6,7 @@ public class Game {
 
     private Board board;
     private BoardCLI boardCli;
+    private Player player;
 
     Game(){
         this.board = null;
@@ -30,11 +31,36 @@ public class Game {
         return boardCli;
     }
 
-    public void config(){
+    public Player config(String playerName){
         this.setBoard(100);
         this.setBoardCli(this.getBoard());
-        this.board.setShips();
-        //this.getBoardCli().print(this.getBoard());
-        this.getBoardCli().displayShips(this.getBoard());
+        this.getBoard().setShips();
+        this.getBoardCli().print(this.getBoard());
+        //this.getBoardCli().displayShips(this.getBoard());
+        this.setPlayer(playerName);
+        return this.getPlayer();
+    }
+
+    public void setPlayer(String name){
+        this.player = new Player(name);
+    }
+
+    public Player getPlayer(){
+        return this.player;
+    }
+
+    public int convertCoordsToMove(){
+        //int moveToInt = App.cli.coordsToPosition(move);
+        return 0;
+    }
+
+    public void validMove(){
+        //check if spot is available
+        //int moveToBoard = App.game.getCurrentPlayer().potentialMove(moveToInt); - validation
+    }
+
+    public void playTurn(){
+        // check if move is a hit or a miss
+        // mark the board
     }
 }

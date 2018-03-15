@@ -6,6 +6,7 @@ import org.junit.Ignore;
 import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.internal.matchers.InstanceOf;
 
 import java.io.IOException;
 import java.lang.reflect.Field;
@@ -13,9 +14,7 @@ import java.lang.reflect.Field;
 import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.*;
 import static org.mockito.MockitoAnnotations.initMocks;
 
 public class GameTest {
@@ -70,7 +69,38 @@ public class GameTest {
     @Test
     public void config() {
         Game testGame = new Game();
-        testGame.config();
+        testGame.config("Player1");
         assertEquals(100, testGame.getBoard().getTotalPositions());
+    }
+
+    @Test
+    public void setPlayer() throws NoSuchFieldException, IllegalAccessException {
+        Game testGame = new Game();
+        testGame.config("Player1");
+        final Field field = testGame.getClass().getDeclaredField("player");
+        field.setAccessible(true);
+
+        assertThat(field.get(testGame), instanceOf(Player.class));
+    }
+
+    @Test
+    public void getPlayer() throws NoSuchFieldException, IllegalAccessException {
+        final Game testGame = new Game();
+        final Player testPlayer = new Player("Player2");
+        final Field field = testGame.getClass().getDeclaredField("player");
+        field.setAccessible(true);
+        field.set(testGame, testPlayer);
+
+        final Player result = testGame.getPlayer();
+
+        assertEquals(testPlayer, result);
+    }
+
+    @Test
+    public void validMove() {
+    }
+
+    @Test
+    public void playTurn() {
     }
 }

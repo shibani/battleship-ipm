@@ -17,11 +17,25 @@ public class App {
         Game game = new Game();
         App app = new App(cli, game);
 
-        app.setup();
+        Player player = app.setup();
+        app.gameLoop(player);
+        //app.gameOver();
     }
 
-    public void setup() throws IOException {
-        this.cli.setup();
-        this.game.config();
+    public Player setup() throws IOException {
+        String playerName = this.cli.setup();
+        return this.game.config(playerName);
+    }
+
+    public void gameLoop(Player player) throws IOException {
+        String move = this.cli.getPlayerMove(player.getName());
+        //convert move to coords
+        //if this.game.validMove(move);
+        //String status = this.game.playTurn(move);
+        //this.cli.moveStatus(status);
+    }
+
+    public void gameOver(){
+
     }
 }
