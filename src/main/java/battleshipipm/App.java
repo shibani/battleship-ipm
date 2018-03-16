@@ -28,11 +28,14 @@ public class App {
     }
 
     public void gameLoop(Player player) throws IOException {
-        String move = this.cli.getPlayerMove(player.getName());
-        //convert move to coords
-        //if this.game.validMove(move);
-        //String status = this.game.playTurn(move);
-        //this.cli.moveStatus(status);
+        String moveString = this.cli.getPlayerMove(player.getName());
+        int move = this.game.convertPlayerMoveToInt(moveString);
+        if(this.game.validMove(move)){
+            this.game.makeMove(move);
+            this.game.getBoardCli().print(this.game.getBoard());
+        } else {
+            this.gameLoop(player);
+        }
     }
 
     public void gameOver(){

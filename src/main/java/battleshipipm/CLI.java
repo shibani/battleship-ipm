@@ -14,7 +14,7 @@ public class CLI {
     private String getPlayerNameString = "Enter your Player Name:\n" +
             "(Name should contain only numbers and alphabets. Name should not be empty)\n";
 
-    private String getPlayerMoveString = "enter your move with one letter for the row and one digit for the column, e.g 'd9':";
+    private String getPlayerMoveString = ", enter your move with one letter for the row and one digit for the column, e.g 'd9':\n";
 
 
     public String setup() throws IOException {
@@ -33,7 +33,7 @@ public class CLI {
     }
 
     public void askForPlayerMove(String str, String name){
-        this.printString(name + " " + str);
+        this.printString(name + str);
     }
 
     public void printString(String message) {
@@ -82,6 +82,6 @@ public class CLI {
 
     public String getPlayerMove(String playerName) throws IOException {
         this.askForPlayerMove(this.getPlayerMoveString, playerName);
-        return this.getPlayerMoveInput(this.getPlayerNameString, playerName);
+        return this.getPlayerMoveInput(this.getPlayerMoveString, playerName);
     }
 }

@@ -96,7 +96,7 @@ public class BoardTest {
         board.setTotalPositions(100);
         board.setShips();
 
-        assertEquals(17, board.getFilledPositions().size());
+        assertEquals(17, board.getFilledShipPositions().size());
     }
 
     @Test
@@ -126,5 +126,67 @@ public class BoardTest {
         board.setRowSize();
 
         assertEquals(10, board.getRowSize());
+    }
+
+    @Test
+    public void coordsToPosition() {
+        String testCoords = "g5";
+        final Board testBoard = new Board();
+        int result = testBoard.coordsToPosition(testCoords);
+        final String testCoordsAlpha = Character.toString(testCoords.charAt(0)).toUpperCase();
+        final int testCoordsInt = Character.getNumericValue(testCoords.charAt(testCoords.length() - 1));
+        int alphaIndex = Arrays.asList(BoardCLI.alpha).indexOf(testCoordsAlpha);
+        int coordsInt = (alphaIndex * 10) + testCoordsInt;
+
+        assertEquals(coordsInt, result);
+    }
+
+    @Test
+    public void isEmpty() {
+        String testCoords = "g5";
+        final Board testBoard = new Board();
+        testBoard.setTotalPositions(100);
+        testBoard.setPositions();
+        int testPosition = testBoard.coordsToPosition(testCoords);
+        boolean result = testBoard.isEmpty(testPosition);
+
+        assertEquals(true, result);
+    }
+
+    @Test
+    public void addMarker() {
+        final Board testBoard = new Board();
+        testBoard.setTotalPositions(100);
+        testBoard.setPositions();
+        testBoard.addMarker(30);
+
+        assertEquals("X", testBoard.getPositions().get(30));
+    }
+
+    @Test
+    public void isEmpty1() {
+        final Board testBoard = new Board();
+        testBoard.setTotalPositions(100);
+        testBoard.setPositions();
+        testBoard.addMarker(35);
+
+        boolean result = testBoard.isEmpty(35);
+
+        assertEquals(false, result);
+    }
+
+    @Test
+    public void checkForHit() {
+        final Board testBoard = new Board();
+        testBoard.setTotalPositions(100);
+        testBoard.setPositions();
+        testBoard.setShips();
+        int position = testBoard.getFilledShipPositions().get(0);
+        if(testBoard.isEmpty(position)){
+            testBoard.addMarker(position);
+        }
+
+        String result = testBoard.checkForHit(position);
+        assertEquals("hit", result);
     }
 }

@@ -52,7 +52,6 @@ public class CLITest {
 
     @Test
     public void getPlayerNameInput() throws IOException {
-
         byte[] data = "Test".getBytes();
         InputStream input = new ByteArrayInputStream(data);
         System.setIn(input);
@@ -110,7 +109,7 @@ public class CLITest {
         when(mockedCli.getPlayerMove("testPlayer")).thenCallRealMethod();
         mockedCli.getPlayerMove("testPlayer");
 
-        verify(mockedCli, times(1)).getPlayerMoveInput(null, "testPlayer√");
+        verify(mockedCli, times(1)).getPlayerMoveInput(null, "testPlayer");
     }
 
     @Test
@@ -119,8 +118,7 @@ public class CLITest {
         System.setOut(new PrintStream(bo));
 
         CLI testCLI = new CLI();
-        Player player = new Player("testPlayer");
-        testCLI.askForPlayerMove("test", player.getName());
+        testCLI.askForPlayerMove(" test", "testPlayer");
 
         bo.flush();
         String inputLines = new String(bo.toByteArray());
@@ -128,7 +126,14 @@ public class CLITest {
     }
 
     @Test
-    public void getPlayerMoveInput() {
+    public void getPlayerMoveInput() throws IOException {
+        byte[] data = "Test".getBytes();
+        InputStream input = new ByteArrayInputStream(data);
+        System.setIn(input);
 
+        CLI testCLI = new CLI();
+        String testResult = testCLI.getPlayerMoveInput("test", "testPlayer");
+
+        assertEquals("Test", testResult);
     }
 }

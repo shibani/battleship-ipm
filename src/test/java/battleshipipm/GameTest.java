@@ -4,12 +4,18 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
+import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.internal.matchers.InstanceOf;
+import org.mockito.invocation.InvocationOnMock;
+import org.mockito.stubbing.Answer;
 
 import java.io.IOException;
 import java.lang.reflect.Field;
+import java.util.ArrayList;
+import java.util.Arrays;
 
 import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.junit.Assert.assertEquals;
@@ -96,11 +102,62 @@ public class GameTest {
         assertEquals(testPlayer, result);
     }
 
-    @Test
-    public void validMove() {
+    @Mock
+    private Board mockedBoard;
+
+    @InjectMocks
+    private Game mockedGame;
+
+    @Before
+    public void beforeSetup() {
+        initMocks(this);
     }
 
     @Test
-    public void playTurn() {
+    public void validMove() {
+        String[] intArray = new String[100];
+        Arrays.fill(intArray, " ");
+        ArrayList<String> positions = new ArrayList<>(
+                Arrays.asList(intArray));
+        when(mockedBoard.getTotalPositions()).thenReturn(100);
+        when(mockedBoard.getPositions()).thenReturn(positions);
+        when(mockedBoard.coordsToPosition(anyString())).thenReturn(33);
+        when(mockedBoard.isEmpty(anyInt())).thenReturn(true);
+        mockedGame.validMove(30);
+
+        verify(mockedBoard, times(1)).isEmpty(anyInt());
+    }
+
+    @Test
+    public void validMove1() {
+        String[] intArray = new String[100];
+        Arrays.fill(intArray, " ");
+        ArrayList<String> positions = new ArrayList<>(
+                Arrays.asList(intArray));
+        when(mockedBoard.getTotalPositions()).thenReturn(100);
+        when(mockedBoard.getPositions()).thenReturn(positions);
+        when(mockedBoard.coordsToPosition(anyString())).thenReturn(33);
+        when(mockedBoard.isEmpty(anyInt())).thenReturn(true);
+        mockedGame.validMove(30);
+
+        verify(mockedBoard, times(1)).coordsToPosition(anyString());
+    }
+
+    @Test
+    public void makeMove() {
+        doNothing().when(mockedBoard).addMarker(30);
+        when(mockedBoard.checkForHit(30)).thenReturn("hit");
+        mockedGame.makeMove(anyInt());
+
+        verify(mockedBoard, times(1)).addMarker(anyInt());
+    }
+
+    @Test
+    public void makeMove1() {
+        doNothing().when(mockedBoard).addMarker(30);
+        when(mockedBoard.checkForHit(30)).thenReturn("hit");
+        mockedGame.makeMove(anyInt());
+
+        verify(mockedBoard, times(1)).checkForHit(anyInt());
     }
 }

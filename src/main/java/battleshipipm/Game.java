@@ -49,18 +49,16 @@ public class Game {
         return this.player;
     }
 
-    public int convertCoordsToMove(){
-        //int moveToInt = App.cli.coordsToPosition(move);
-        return 0;
+    public boolean validMove(int position) {
+        return (this.getBoard().isEmpty(position));
     }
 
-    public void validMove(){
-        //check if spot is available
-        //int moveToBoard = App.game.getCurrentPlayer().potentialMove(moveToInt); - validation
+    public String makeMove(int move){
+        this.board.addMarker(move);
+        return this.board.checkForHit(move);
     }
 
-    public void playTurn(){
-        // check if move is a hit or a miss
-        // mark the board
+    public int convertPlayerMoveToInt(String move){
+        return this.getBoard().coordsToPosition(move);
     }
 }
