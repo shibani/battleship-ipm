@@ -18,6 +18,7 @@ public class App {
         App app = new App(cli, game);
 
         Player player = app.setup();
+
         app.gameLoop(player);
         //app.gameOver();
     }
@@ -31,14 +32,16 @@ public class App {
         String moveString = this.cli.getPlayerMove(player.getName());
         int move = this.game.convertPlayerMoveToInt(moveString);
         if(this.game.validMove(move)){
-            this.game.makeMove(move);
-            this.game.getBoardCli().print(this.game.getBoard());
+            String status = this.game.makeMove(move);
+            this.game.printBoard();
+            this.game.printStatus(player.getName(), status);
         } else {
+            this.cli.tryAgain();
             this.gameLoop(player);
         }
     }
 
-    public void gameOver(){
-
+    public boolean gameOver(){
+        return this.game.isOver();
     }
 }

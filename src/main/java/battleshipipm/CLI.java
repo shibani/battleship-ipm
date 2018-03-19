@@ -16,6 +16,8 @@ public class CLI {
 
     private String getPlayerMoveString = ", enter your move with one letter for the row and one digit for the column, e.g 'd9':\n";
 
+    private String tryAgainString = "That position is already filled. Please try again.";
+
 
     public String setup() throws IOException {
         this.welcome(this.welcomeString);
@@ -83,5 +85,9 @@ public class CLI {
     public String getPlayerMove(String playerName) throws IOException {
         this.askForPlayerMove(this.getPlayerMoveString, playerName);
         return this.getPlayerMoveInput(this.getPlayerMoveString, playerName);
+    }
+
+    public void tryAgain(){
+        this.printString(this.tryAgainString);
     }
 }

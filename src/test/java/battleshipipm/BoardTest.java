@@ -1,5 +1,6 @@
 package battleshipipm;
 
+import org.junit.Assert;
 import org.junit.Test;
 
 import java.lang.reflect.Array;
@@ -8,6 +9,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import static net.bytebuddy.matcher.ElementMatchers.anyOf;
+import static net.bytebuddy.matcher.ElementMatchers.is;
 import static org.junit.Assert.*;
 
 public class BoardTest {
@@ -91,7 +94,7 @@ public class BoardTest {
     }
 
     @Test
-    public void getFilledPositions() {
+    public void getFilledShipPositions() {
         final Board board = new Board();
         board.setTotalPositions(100);
         board.setShips();
@@ -160,7 +163,8 @@ public class BoardTest {
         testBoard.setPositions();
         testBoard.addMarker(30);
 
-        assertEquals("X", testBoard.getPositions().get(30));
+        String testString = testBoard.getPositions().get(30);
+        assertTrue("X".equals(testString) || "n".equals(testString));
     }
 
     @Test
@@ -188,5 +192,24 @@ public class BoardTest {
 
         String result = testBoard.checkForHit(position);
         assertEquals("hit", result);
+    }
+
+    @Test
+    public void isFull() {
+        final Board testBoard = new Board();
+        testBoard.setTotalPositions(5);
+        testBoard.setPositions();
+        testBoard.addMarker(0);
+        testBoard.addMarker(1);
+        testBoard.addMarker(2);
+        testBoard.addMarker(3);
+        testBoard.addMarker(4);
+
+        assertTrue(testBoard.isFull());
+    }
+
+    @Test
+    public void shipsAreSunk() {
+
     }
 }

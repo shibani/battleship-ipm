@@ -104,6 +104,8 @@ public class GameTest {
 
     @Mock
     private Board mockedBoard;
+    @Mock
+    private BoardCLI mockedBoardCli;
 
     @InjectMocks
     private Game mockedGame;
@@ -129,7 +131,7 @@ public class GameTest {
     }
 
     @Test
-    public void validMove1() {
+    public void convertPlayerMoveToInt() {
         String[] intArray = new String[100];
         Arrays.fill(intArray, " ");
         ArrayList<String> positions = new ArrayList<>(
@@ -138,7 +140,7 @@ public class GameTest {
         when(mockedBoard.getPositions()).thenReturn(positions);
         when(mockedBoard.coordsToPosition(anyString())).thenReturn(33);
         when(mockedBoard.isEmpty(anyInt())).thenReturn(true);
-        mockedGame.validMove(30);
+        mockedGame.convertPlayerMoveToInt("d3");
 
         verify(mockedBoard, times(1)).coordsToPosition(anyString());
     }
@@ -159,5 +161,25 @@ public class GameTest {
         mockedGame.makeMove(anyInt());
 
         verify(mockedBoard, times(1)).checkForHit(anyInt());
+    }
+
+    @Test
+    public void printBoard() {
+        doNothing().when(mockedBoardCli).print(mockedBoard);
+        mockedBoardCli.print(mockedBoard);
+
+        verify(mockedBoardCli, times(1)).print(mockedBoard);
+    }
+
+    @Test
+    public void printStatus() {
+        doNothing().when(mockedBoardCli).printStatus(anyString(), anyString());
+        mockedBoardCli.printStatus(anyString(), anyString());
+
+        verify(mockedBoardCli, times(1)).printStatus(anyString(), anyString());
+    }
+
+    @Test
+    public void isOver() {
     }
 }

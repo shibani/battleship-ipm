@@ -49,4 +49,19 @@ public class BoardCLITest {
         assertTrue(inputLines.contains("|  D  |"));
         assertTrue(inputLines.contains("|  S  |"));
     }
+
+    @Test
+    public void printStatus() throws IOException {
+        Board board = new Board();
+        BoardCLI bcli = new BoardCLI(board);
+        ByteArrayOutputStream bo = new ByteArrayOutputStream();
+        System.setOut(new PrintStream(bo));
+
+        bcli.printStatus("Player1", "hit");
+
+        bo.flush();
+        String inputLines = new String(bo.toByteArray());
+
+        assertTrue(inputLines.contains("Player1, that was a hit!"));
+    }
 }

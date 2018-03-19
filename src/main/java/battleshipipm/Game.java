@@ -41,7 +41,7 @@ public class Game {
         return this.getPlayer();
     }
 
-    public void setPlayer(String name){
+    private public void setPlayer(String name){
         this.player = new Player(name);
     }
 
@@ -60,5 +60,17 @@ public class Game {
 
     public int convertPlayerMoveToInt(String move){
         return this.getBoard().coordsToPosition(move);
+    }
+
+    public void printBoard(){
+        this.getBoardCli().print(this.getBoard());
+    }
+
+    public void printStatus(String name, String status){
+        this.getBoardCli().printStatus(name, status);
+    }
+
+    public boolean isOver(){
+        return this.getBoard().isFull();
     }
 }

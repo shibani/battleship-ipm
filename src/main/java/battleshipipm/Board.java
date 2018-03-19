@@ -124,7 +124,11 @@ public class Board {
 
     public void addMarker(int position){
         if (this.isEmpty(position)){
-            this.getPositions().set(position, "X");
+            if(this.getFilledShipPositions().contains(position)){
+                this.getPositions().set(position, "X");
+            } else {
+                this.getPositions().set(position, "n");
+            }
         }
     }
 
@@ -136,5 +140,13 @@ public class Board {
             status = "miss";
         }
         return status;
+    }
+
+    public boolean isFull(){
+        return !this.getPositions().contains(" ");
+    }
+
+    public boolean shipsAreSunk(){
+        return true;
     }
 }
