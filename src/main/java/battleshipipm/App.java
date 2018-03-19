@@ -17,10 +17,14 @@ public class App {
         Game game = new Game();
         App app = new App(cli, game);
 
-        Player player = app.setup();
+        app.playGame();
+    }
 
-        app.gameLoop(player);
-        //app.gameOver();
+    public void playGame() throws IOException {
+        Player player = this.setup();
+        while(!this.gameOver()){
+            this.gameLoop(player);
+        }
     }
 
     public Player setup() throws IOException {

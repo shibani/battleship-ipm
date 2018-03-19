@@ -41,7 +41,7 @@ public class Game {
         return this.getPlayer();
     }
 
-    private public void setPlayer(String name){
+    public void setPlayer(String name){
         this.player = new Player(name);
     }
 

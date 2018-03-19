@@ -31,7 +31,7 @@ public class BoardCLI {
     }
 
     public void printStatus(String name, String status){
-        System.out.print(String.format("%s%s%s%s", name, ", that was a ", status, "!"));
+        System.out.print(String.format("%s%s%s%s", name, ", that was a ", status, "!\n"));
     }
 
     public void displayShips(Board board){
