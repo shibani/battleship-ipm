@@ -209,7 +209,25 @@ public class BoardTest {
     }
 
     @Test
-    public void shipsAreSunk() {
+    public void allShipsAreSunk() {
+        final Board testBoard = new Board();
+        testBoard.setTotalPositions(100);
+        testBoard.setPositions();
+        testBoard.setShips();
 
+        assertFalse(testBoard.allShipsAreSunk());
+    }
+
+    @Test
+    public void allShipsAreSunk1() {
+        final Board testBoard = new Board();
+        testBoard.setTotalPositions(100);
+        testBoard.setPositions();
+        testBoard.setShips();
+
+        for(Integer shipPosition: testBoard.getFilledShipPositions()){
+            testBoard.getPositions().set(shipPosition, "X");
+        }
+        assertTrue(testBoard.allShipsAreSunk());
     }
 }

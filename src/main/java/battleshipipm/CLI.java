@@ -3,6 +3,7 @@ package battleshipipm;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.Scanner;
 
 public class CLI {
 
@@ -22,7 +23,6 @@ public class CLI {
     public String setup() throws IOException {
         this.welcome(this.welcomeString);
         this.askForPlayerName(this.getPlayerNameString);
-        String field = "Name";
         return this.getPlayerNameInput(this.getPlayerNameString);
     }
 
@@ -45,10 +45,26 @@ public class CLI {
     public String getPlayerNameInput(String str) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         String input = br.readLine();
-
         String output = "";
+
         try {
             output = input.trim();
+            if (output.length() < 1){
+                System.out.print("Name cannot be empty. Please try again.\n");
+                this.askForPlayerName(str);
+                this.getPlayerNameInput(str);
+            } else {
+                System.out.print("You selected " + output + "\n");
+            }
+        } catch(NullPointerException e) {
+            System.out.print("Caught NullPointerException");
+        }
+
+        /*Scanner sc = new Scanner(System.in);
+        String output = "";
+        try{
+            output = sc.next().trim();
+            sc.nextLine();
             if (output.length() > 1){
                 System.out.print("You selected " + output + "\n");
             } else {
@@ -56,9 +72,12 @@ public class CLI {
                 this.askForPlayerName(str);
                 this.getPlayerNameInput(str);
             }
-        } catch(NullPointerException e) {
+        } catch (NullPointerException e){
             System.out.print("Caught NullPointerException");
         }
+        System.out.println("output to send: " + output);
+        sc.close();*/
+        //System.out.println("output to send: " + output);
         return output;
     }
 

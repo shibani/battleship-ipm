@@ -71,6 +71,7 @@ public class Game {
     }
 
     public boolean isOver(){
-        return this.getBoard().isFull();
+        //return this.getBoard().isFull();
+        return this.getBoard().allShipsAreSunk();
     }
 }
