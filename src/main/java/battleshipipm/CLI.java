@@ -19,6 +19,8 @@ public class CLI {
 
     private String tryAgainString = "That position is already filled. Please try again.\n";
 
+    private String gameOver = "You won";
+
 
     public String setup() throws IOException {
         this.welcome(this.welcomeString);
@@ -108,5 +110,9 @@ public class CLI {
 
     public void tryAgain(){
         this.printString(this.tryAgainString);
+    }
+
+    public void endGame(Player player){
+        this.printString(gameOver + ", " + player.getName() + "!");
     }
 }

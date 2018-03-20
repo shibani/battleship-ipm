@@ -17,9 +17,11 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+import static junit.framework.TestCase.assertTrue;
 import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.mockito.Mockito.*;
 import static org.mockito.MockitoAnnotations.initMocks;
 
@@ -179,10 +181,19 @@ public class GameTest {
         verify(mockedBoardCli, times(1)).printStatus(anyString(), anyString());
     }
 
-    @Test
+    @Ignore
     public void isOver() {
         when(mockedBoard.isFull()).thenReturn(true);
-        //App.start();
+        boolean result = mockedGame.isOver();
 
+        assertTrue(result);
+    }
+
+    @Test
+    public void allShipsAreSunk() {
+        when(mockedBoard.allShipsAreSunk()).thenReturn(true);
+        boolean result = mockedGame.isOver();
+
+        assertTrue(result);
     }
 }

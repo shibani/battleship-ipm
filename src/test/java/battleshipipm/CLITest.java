@@ -136,4 +136,31 @@ public class CLITest {
 
         assertEquals("Test", testResult);
     }
+
+    @Test
+    public void tryAgain() throws IOException {
+        ByteArrayOutputStream bo = new ByteArrayOutputStream();
+        System.setOut(new PrintStream(bo));
+
+        CLI testCLI = new CLI();
+        testCLI.tryAgain();
+
+        bo.flush();
+        String inputLines = new String(bo.toByteArray());
+        assertTrue(inputLines.contains("That position is already filled. Please try again."));
+    }
+
+    @Test
+    public void endGame() throws IOException {
+        ByteArrayOutputStream bo = new ByteArrayOutputStream();
+        System.setOut(new PrintStream(bo));
+
+        Player testPlayer = new Player("Player 2");
+        CLI testCLI = new CLI();
+        testCLI.endGame(testPlayer);
+
+        bo.flush();
+        String inputLines = new String(bo.toByteArray());
+        assertTrue(inputLines.contains("You won, Player 2!"));
+    }
 }

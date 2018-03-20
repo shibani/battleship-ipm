@@ -81,6 +81,19 @@ public class AppTest {
     }
 
     @Test
+    public void playGame3() throws IOException {
+        App testApp = new App(mockedCli, mockedGame);
+        App spyApp = Mockito.spy(testApp);
+
+        when(spyApp.setup()).thenReturn(mockedPlayer);
+        when(spyApp.gameOver()).thenReturn(true);
+        doNothing().when(spyApp).gameLoop(mockedPlayer);
+        spyApp.playGame();
+
+        verify(spyApp, times(1)).endGame(mockedPlayer);
+    }
+
+    @Test
     public void setup() throws IOException {
         mockedApp.setup();
 
@@ -189,8 +202,16 @@ public class AppTest {
 
     @Test
     public void gameOver() {
+        when(mockedApp.gameOver()).thenReturn(false);
         mockedApp.gameOver();
         verify(mockedGame, times(1)).isOver();
+    }
+
+    @Test
+    public void endGame() throws IOException {
+        when(mockedApp.gameOver()).thenReturn(true);
+        mockedApp.playGame();
+        verify(mockedCli, times(1)).endGame((Player) isNull());
     }
 }
 
