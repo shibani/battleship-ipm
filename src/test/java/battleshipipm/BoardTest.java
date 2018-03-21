@@ -7,6 +7,7 @@ import java.lang.reflect.Array;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 
 import static net.bytebuddy.matcher.ElementMatchers.anyOf;
@@ -229,5 +230,146 @@ public class BoardTest {
             testBoard.getPositions().set(shipPosition, "X");
         }
         assertTrue(testBoard.allShipsAreSunk());
+    }
+
+    @Test
+    public void shipIsSunk() throws NoSuchFieldException, IllegalAccessException {
+        final Board testBoard = new Board();
+        testBoard.setTotalPositions(16);
+        testBoard.setPositions();
+
+        ArrayList<Integer> shipPositions = new ArrayList<>();
+        shipPositions.add(9);
+        shipPositions.add(10);
+        shipPositions.add(11);
+
+        ArrayList<String> shipMarkers = new ArrayList<>();
+        shipMarkers.add("S");
+        shipMarkers.add("S");
+        shipMarkers.add("S");
+
+        Field field1 = testBoard.getClass().getDeclaredField("filledShipPositions");
+        field1.setAccessible(true);
+        field1.set(testBoard, shipPositions);
+
+        Field field2 = testBoard.getClass().getDeclaredField("shipMarkers");
+        field2.setAccessible(true);
+        field2.set(testBoard, shipMarkers);
+
+        Ship testShip = new Ship();
+        Field field3 = testShip.getClass().getDeclaredField("position");
+        field3.setAccessible(true);
+        field3.set(testShip, shipPositions);
+
+        for(int i = 0; i < 9; i++){
+            testBoard.addMarker(i);
+        }
+
+        String result = testBoard.shipIsSunk(9);
+
+        assertEquals("none", result);
+    }
+
+    @Test
+    public void shipIsSunk1() throws NoSuchFieldException, IllegalAccessException {
+        final Board testBoard = new Board();
+        testBoard.setTotalPositions(16);
+        testBoard.setPositions();
+
+        ArrayList<Integer> shipPositions = new ArrayList<>();
+        shipPositions.add(9);
+        shipPositions.add(10);
+        shipPositions.add(11);
+
+        ArrayList<String> shipMarkers = new ArrayList<>();
+        shipMarkers.add("S");
+        shipMarkers.add("S");
+        shipMarkers.add("S");
+
+        Field field1 = testBoard.getClass().getDeclaredField("filledShipPositions");
+        field1.setAccessible(true);
+        field1.set(testBoard, shipPositions);
+
+        Field field2 = testBoard.getClass().getDeclaredField("shipMarkers");
+        field2.setAccessible(true);
+        field2.set(testBoard, shipMarkers);
+
+        Ship testShip = new Ship();
+        Field field3 = testShip.getClass().getDeclaredField("position");
+        field3.setAccessible(true);
+        field3.set(testShip, shipPositions);
+
+        for(int i = 0; i < 11; i++){
+            testBoard.addMarker(i);
+        }
+
+        testBoard.shipIsSunk(9);
+        testBoard.shipIsSunk(10);
+
+        testBoard.addMarker(11);
+        String result3 = testBoard.shipIsSunk(11);
+
+        assertEquals("S", result3);
+    }
+
+    @Test
+    public void totalAircraftCarrierMarkerCount() {
+        final Board testBoard = new Board();
+        testBoard.setTotalPositions(100);
+        testBoard.setPositions();
+        testBoard.setShips();
+
+        int count = testBoard.totalMarkerCount("A");
+        assertEquals(5, count);
+    }
+
+    @Test
+    public void totalPatrolBoatMarkerCount() {
+        final Board testBoard = new Board();
+        testBoard.setTotalPositions(100);
+        testBoard.setPositions();
+        testBoard.setShips();
+
+        int count = testBoard.totalMarkerCount("P");
+        assertEquals(2, count);
+    }
+
+    @Test
+    public void setCurrentHitCount() throws NoSuchFieldException, IllegalAccessException{
+        final Board testBoard = new Board();
+        testBoard.setTotalPositions(100);
+        testBoard.setPositions();
+        testBoard.setShips();
+
+        HashMap<String, Integer> map = new HashMap<>();
+        if (!map.containsKey("C")) {
+            map.put("C", 3);
+        }
+
+        Field field1 = testBoard.getClass().getDeclaredField("hitCount");
+        field1.setAccessible(true);
+        field1.set(testBoard, map);
+
+        assertEquals(3, (int)((HashMap<String, Integer>)field1.get(testBoard)).get("C"));
+    }
+
+    @Test
+    public void getCurrentHitCount() throws NoSuchFieldException, IllegalAccessException {
+        final Board testBoard = new Board();
+        testBoard.setTotalPositions(100);
+        testBoard.setPositions();
+        testBoard.setShips();
+
+        HashMap<String, Integer> map = new HashMap<>();
+        if (!map.containsKey("c")) {
+            map.put("C", 3);
+        }
+
+        Field field1 = testBoard.getClass().getDeclaredField("hitCount");
+        field1.setAccessible(true);
+        field1.set(testBoard, map);
+
+        int count = testBoard.getCurrentHitCount("C");
+        assertEquals(3, count);
     }
 }

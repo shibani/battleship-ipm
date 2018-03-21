@@ -9,7 +9,6 @@ public class Ship {
     private String type;
     private int size;
     private List<Integer> position = new ArrayList<>();
-
     public static final HashMap<String, Integer> shipTypes = new HashMap<>();
 
     static {

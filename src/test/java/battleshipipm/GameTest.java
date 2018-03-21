@@ -157,15 +157,6 @@ public class GameTest {
     }
 
     @Test
-    public void makeMove1() {
-        doNothing().when(mockedBoard).addMarker(30);
-        when(mockedBoard.checkForHit(30)).thenReturn("hit");
-        mockedGame.makeMove(anyInt());
-
-        verify(mockedBoard, times(1)).checkForHit(anyInt());
-    }
-
-    @Test
     public void printBoard() {
         doNothing().when(mockedBoardCli).print(mockedBoard);
         mockedBoardCli.print(mockedBoard);
@@ -175,10 +166,42 @@ public class GameTest {
 
     @Test
     public void printStatus() {
-        doNothing().when(mockedBoardCli).printStatus(anyString(), anyString());
-        mockedBoardCli.printStatus(anyString(), anyString());
+        doNothing().when(mockedBoardCli).printStatus("Player1", "miss");
+        when(mockedGame.getBoard().checkForHit(30)).thenReturn("hit");
+        when(mockedBoard.shipIsSunk(30)).thenReturn("none");
+        mockedGame.printStatus("Player1", 30);
 
-        verify(mockedBoardCli, times(1)).printStatus(anyString(), anyString());
+        verify(mockedBoardCli, times(1)).printStatus("Player1", "hit");
+    }
+
+    @Test
+    public void printStatus1() {
+        doNothing().when(mockedBoardCli).printStatus(anyString(), anyString());
+        when(mockedGame.getBoard().checkForHit(30)).thenReturn("hit");
+        when(mockedBoard.shipIsSunk(30)).thenReturn("P");
+        mockedGame.printStatus("Player1", 30);
+
+        verify(mockedBoard, times(1)).shipIsSunk(30);
+    }
+
+    @Test
+    public void printStatus2() {
+        doNothing().when(mockedBoardCli).printStatus(anyString(), anyString());
+        when(mockedGame.getBoard().checkForHit(30)).thenReturn("hit");
+        when(mockedBoard.shipIsSunk(30)).thenReturn("P");
+        mockedGame.printStatus("Player1", 30);
+
+        verify(mockedBoardCli, times(1)).printSunkStatus(anyString(), anyString());
+    }
+
+    @Test
+    public void printStatus3() {
+        doNothing().when(mockedBoardCli).printStatus(anyString(), anyString());
+        when(mockedGame.getBoard().checkForHit(30)).thenReturn("miss");
+        when(mockedBoard.shipIsSunk(30)).thenReturn("P");
+        mockedGame.printStatus("Player1", 30);
+
+        verify(mockedBoardCli, times(1)).printStatus("Player1", "miss");
     }
 
     @Ignore

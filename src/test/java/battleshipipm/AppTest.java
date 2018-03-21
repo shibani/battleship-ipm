@@ -3,18 +3,22 @@ package battleshipipm;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
-
+import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.Spy;
+import org.powermock.api.mockito.PowerMockito;
+import org.powermock.core.classloader.annotations.PrepareForTest;
+import org.powermock.modules.junit4.PowerMockRunner;
 
 import java.io.IOException;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.*;
 import static org.mockito.MockitoAnnotations.initMocks;
 
+//@RunWith(PowerMockRunner.class)
+//@PrepareForTest(App.class)
 public class AppTest {
 
     @Mock
@@ -29,16 +33,22 @@ public class AppTest {
     @InjectMocks
     private App mockedApp;
 
+
     @Before
     public void beforeSetup() {
         initMocks(this);
     }
 
     @Ignore
-    public void start() throws IOException {
-        //Powermockito - test class method here
+    public void start() throws Exception {
+        //PowerMockito.mockStatic(App.class);
+        CLI testCli = Mockito.mock(CLI.class);
+        App testApp = Mockito.mock(App.class);
+        PowerMockito.when(testCli.setup()).thenReturn("Player1");
         App.start();
-        verify(mockedApp, times(1)).playGame();
+        //testApp.playGame();
+        //verify(testCli, times(1)).setup();
+        assertEquals("Player1", testCli.setup());
     }
 
     @Test
@@ -77,7 +87,7 @@ public class AppTest {
         doNothing().when(spyApp).gameLoop(mockedPlayer);
         spyApp.playGame();
 
-        verify(spyApp, times(2)).gameOver();
+        verify(spyApp, atLeast(2)).gameOver();
     }
 
     @Test
@@ -113,9 +123,9 @@ public class AppTest {
         when(mockedCli.getPlayerMove(anyString())).thenReturn("d3");
         when(mockedGame.convertPlayerMoveToInt(anyString())).thenReturn(30);
         when(mockedGame.validMove(anyInt())).thenReturn(true);
-        when(mockedGame.makeMove(anyInt())).thenReturn("miss");
+        doNothing().when(mockedGame).makeMove(anyInt());
         doNothing().when(mockedGame).printBoard();
-        doNothing().when(mockedGame).printStatus(anyString(),anyString());
+        doNothing().when(mockedGame).printStatus(anyString(),anyInt());
 
         mockedApp.gameLoop(mockedPlayer);
         verify(mockedCli, times(1)).getPlayerMove(mockedPlayer.getName());
@@ -126,9 +136,9 @@ public class AppTest {
         when(mockedCli.getPlayerMove(anyString())).thenReturn("d3");
         when(mockedGame.convertPlayerMoveToInt(anyString())).thenReturn(30);
         when(mockedGame.validMove(anyInt())).thenReturn(true);
-        when(mockedGame.makeMove(anyInt())).thenReturn("miss");
+        doNothing().when(mockedGame).makeMove(anyInt());
         doNothing().when(mockedGame).printBoard();
-        doNothing().when(mockedGame).printStatus(anyString(),anyString());
+        doNothing().when(mockedGame).printStatus(anyString(),anyInt());
 
         mockedApp.gameLoop(mockedPlayer);
         verify(mockedGame, times(1)).convertPlayerMoveToInt(isNull());
@@ -139,9 +149,9 @@ public class AppTest {
         when(mockedCli.getPlayerMove(anyString())).thenReturn("d3");
         when(mockedGame.convertPlayerMoveToInt(anyString())).thenReturn(30);
         when(mockedGame.validMove(anyInt())).thenReturn(true);
-        when(mockedGame.makeMove(anyInt())).thenReturn("miss");
+        doNothing().when(mockedGame).makeMove(anyInt());
         doNothing().when(mockedGame).printBoard();
-        doNothing().when(mockedGame).printStatus(anyString(),anyString());
+        doNothing().when(mockedGame).printStatus(anyString(),anyInt());
 
         mockedApp.gameLoop(mockedPlayer);
         verify(mockedGame, times(1)).validMove(anyInt());
@@ -152,9 +162,9 @@ public class AppTest {
         when(mockedCli.getPlayerMove(anyString())).thenReturn("d3");
         when(mockedGame.convertPlayerMoveToInt(anyString())).thenReturn(30);
         when(mockedGame.validMove(anyInt())).thenReturn(true);
-        when(mockedGame.makeMove(anyInt())).thenReturn("miss");
+        doNothing().when(mockedGame).makeMove(anyInt());
         doNothing().when(mockedGame).printBoard();
-        doNothing().when(mockedGame).printStatus(anyString(),anyString());
+        doNothing().when(mockedGame).printStatus(anyString(),anyInt());
 
         mockedApp.gameLoop(mockedPlayer);
         verify(mockedGame, times(1)).makeMove(anyInt());
@@ -165,9 +175,9 @@ public class AppTest {
         when(mockedCli.getPlayerMove(anyString())).thenReturn("d3");
         when(mockedGame.convertPlayerMoveToInt(anyString())).thenReturn(30);
         when(mockedGame.validMove(anyInt())).thenReturn(true);
-        when(mockedGame.makeMove(anyInt())).thenReturn("miss");
+        doNothing().when(mockedGame).makeMove(anyInt());
         doNothing().when(mockedGame).printBoard();
-        doNothing().when(mockedGame).printStatus(anyString(),anyString());
+        doNothing().when(mockedGame).printStatus(anyString(),anyInt());
 
         mockedApp.gameLoop(mockedPlayer);
         verify(mockedGame, times(1)).printBoard();
@@ -179,12 +189,11 @@ public class AppTest {
         when(mockedCli.getPlayerMove(anyString())).thenReturn("d3");
         when(mockedGame.convertPlayerMoveToInt(anyString())).thenReturn(30);
         when(mockedGame.validMove(anyInt())).thenReturn(true);
-        when(mockedGame.makeMove(anyInt())).thenReturn("hit");
+        doNothing().when(mockedGame).makeMove(anyInt());
         doNothing().when(mockedGame).printBoard();
-        doNothing().when(mockedGame).printStatus(anyString(),anyString());
-
+        doNothing().when(mockedGame).printStatus(anyString(),anyInt());
         mockedApp.gameLoop(testPlayer);
-        verify(mockedGame, times(1)).printStatus(testPlayer.getName(), "hit");
+        verify(mockedGame, times(1)).printStatus(testPlayer.getName(), 30);
     }
 
     @Test
@@ -192,7 +201,7 @@ public class AppTest {
         when(mockedCli.getPlayerMove(anyString())).thenReturn("d3");
         when(mockedGame.convertPlayerMoveToInt(anyString())).thenReturn(30);
         when(mockedGame.validMove(anyInt())).thenReturn(false).thenReturn(false).thenReturn(true);
-        when(mockedGame.makeMove(anyInt())).thenReturn("miss");
+        doNothing().when(mockedGame).makeMove(anyInt());
         doNothing().when(mockedGame).printBoard();
         doNothing().when(mockedCli).tryAgain();
 
@@ -214,5 +223,4 @@ public class AppTest {
         verify(mockedCli, times(1)).endGame((Player) isNull());
     }
 }
-
 

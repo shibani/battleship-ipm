@@ -34,6 +34,10 @@ public class BoardCLI {
         System.out.print(String.format("%s%s%s%s", name, ", that was a ", status, "!\n"));
     }
 
+    public void printSunkStatus(String name, String shipType){
+        System.out.print(String.format("%s%s%s%s", name, ", you sunk the ", shipType, "!\n"));
+    }
+
     public void displayShips(Board board){
         this.printHeader();
 

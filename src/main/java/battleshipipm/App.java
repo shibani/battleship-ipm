@@ -39,9 +39,9 @@ public class App {
         String moveString = this.cli.getPlayerMove(player.getName());
         int move = this.game.convertPlayerMoveToInt(moveString);
         if(this.game.validMove(move)){
-            String status = this.game.makeMove(move);
+            this.game.makeMove(move);
             this.game.printBoard();
-            this.game.printStatus(player.getName(), status);
+            this.game.printStatus(player.getName(), move);
         } else {
             this.cli.tryAgain();
             this.gameLoop(player);
