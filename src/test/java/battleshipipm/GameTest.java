@@ -8,6 +8,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 
 import java.io.IOException;
+import java.lang.reflect.Field;
 
 import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.junit.Assert.assertEquals;
@@ -19,30 +20,49 @@ import static org.mockito.MockitoAnnotations.initMocks;
 
 public class GameTest {
 
-    @Mock
-    BoardCLI mockedBoardCli;
-    @Mock
-    Board mockedBoard;
+    @Test
+    public void setBoard() {
+        final Game testGame = new Game();
+        testGame.setBoard(10);
 
-
-    @InjectMocks
-    private Game mockedGame;
-
-    @Before
-    public void beforeSetup() {
-        initMocks(this);
+        assertThat(testGame.getBoard(), instanceOf(Board.class));
     }
 
     @Test
-    public void getBoard(){
-        mockedGame.config();
-        assertThat(mockedGame.getBoard(), instanceOf(Board.class));
+    public void getBoard() throws NoSuchFieldException, IllegalAccessException {
+        final Game testGame = new Game();
+        final Board testBoard = new Board();
+        testGame.setBoard(10);
+
+        final Field field = testGame.getClass().getDeclaredField("board");
+        field.setAccessible(true);
+        field.set(testGame, testBoard);
+
+        final Board result = testGame.getBoard();
+
+        assertEquals(testBoard, result);
     }
 
     @Test
-    public void getBoardCli() {
-        mockedGame.config();
-        assertThat(mockedGame.getBoardCli(), instanceOf(BoardCLI.class));
+    public void setBoardCli() {
+        final Game testGame = new Game();
+        testGame.setBoardCli();
+
+        assertThat(testGame.getBoardCli(), instanceOf(BoardCLI.class));
+    }
+
+    @Test
+    public void getBoardCli() throws NoSuchFieldException, IllegalAccessException {
+        final Game testGame = new Game();
+        final BoardCLI testBoardCLI = new BoardCLI();
+
+        final Field field = testGame.getClass().getDeclaredField("boardCli");
+        field.setAccessible(true);
+        field.set(testGame, testBoardCLI);
+
+        final BoardCLI result = testGame.getBoardCli();
+
+        assertEquals(testBoardCLI, result);
     }
 
     @Test

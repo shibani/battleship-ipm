@@ -13,7 +13,6 @@ public class App {
     }
 
     public static void start() throws IOException {
-
         CLI cli = new CLI();
         Game game = new Game();
         App app = new App(cli, game);
