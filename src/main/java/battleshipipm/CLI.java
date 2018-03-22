@@ -74,8 +74,8 @@ public class CLI {
             try{
                 output = br.readLine();
                 if(output.trim().length() > 1){
-                    if(output.trim().length() == 2 && Character.isLetter(output.trim().charAt(0))
-                            && Character.isDigit(output.trim().charAt(1))){
+                    if((output.trim().length() == 2) && Character.isLetter(output.trim().charAt(0))
+                            && Character.isDigit(output.trim().charAt(1)) && (output.trim().charAt(0) <= 'j')){
                         System.out.print("You selected " + output.trim() + "\n");
                         invalid = false;
                     } else if (output.trim().equals("exit")){

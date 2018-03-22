@@ -1,5 +1,6 @@
 package battleshipipm;
 
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -16,6 +17,7 @@ import java.io.*;
 import static junit.framework.TestCase.assertEquals;
 import static junit.framework.TestCase.assertTrue;
 import static junit.framework.TestCase.fail;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.mockito.Mockito.*;
 import static org.mockito.MockitoAnnotations.initMocks;
 
@@ -53,14 +55,14 @@ public class CLITest {
 
     @Test
     public void getPlayerNameInput() {
-        byte[] data = "Test".getBytes();
+        byte[] data = "Player 1".getBytes();
         InputStream input = new ByteArrayInputStream(data);
         System.setIn(input);
 
         CLI testCLI = new CLI();
         String testResult = testCLI.getPlayerNameInput();
 
-        assertEquals("Test", testResult);
+        assertEquals("Player 1", testResult);
     }
 
     @Test
@@ -129,37 +131,20 @@ public class CLITest {
         CLI testCLI = new CLI();
         String testResult = testCLI.getPlayerMoveInput("f5", "Player1");
 
-
         assertEquals("f5", testResult);
     }
 
-    /*@Test(expected=NullPointerException.class)
-    public void getPlayerMoveInput1() throws IOException {
-        byte[] data = "".getBytes();
+    @Ignore
+    public void getPlayerMoveInput1() {
+        byte[] data = "f55".getBytes();
         InputStream input = new ByteArrayInputStream(data);
         System.setIn(input);
 
         CLI testCLI = new CLI();
-        fail(testCLI.getPlayerMoveInput(anyString(), anyString()));
+        String testResult = testCLI.getPlayerMoveInput("f55", "Player1");
+
+        assertEquals("f5", testResult);
     }
-
-    @Test(expected=NullPointerException.class)
-    public void getPlayerMoveInput2() throws IOException {
-        byte[] data = "  ".getBytes();
-        InputStream input = new ByteArrayInputStream(data);
-        System.setIn(input);
-
-        ByteArrayOutputStream bo = new ByteArrayOutputStream();
-        System.setOut(new PrintStream(bo));
-
-        CLI testCLI = new CLI();
-        //String testResult = testCLI.getPlayerMoveInput("  ", "testPlayer");
-        String testResult = testCLI.getPlayerMoveInput(anyString(), anyString());
-
-        bo.flush();
-        String inputLines = new String(bo.toByteArray());
-        assertTrue(inputLines.contains("Move cannot be empty. Please try again.\n"));
-    }*/
 
     @Test
     public void tryAgain() throws IOException {
