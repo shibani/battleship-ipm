@@ -46,7 +46,8 @@ public class GameTest {
     @Test
     public void setBoardCli() {
         final Game testGame = new Game();
-        testGame.setBoardCli();
+        Board testBoard = new Board();
+        testGame.setBoardCli(testBoard);
 
         assertThat(testGame.getBoardCli(), instanceOf(BoardCLI.class));
     }
@@ -54,7 +55,8 @@ public class GameTest {
     @Test
     public void getBoardCli() throws NoSuchFieldException, IllegalAccessException {
         final Game testGame = new Game();
-        final BoardCLI testBoardCLI = new BoardCLI();
+        Board testBoard = new Board();
+        final BoardCLI testBoardCLI = new BoardCLI(testBoard);
 
         final Field field = testGame.getClass().getDeclaredField("boardCli");
         field.setAccessible(true);

@@ -14,7 +14,7 @@ public class BoardCLITest {
     @Test
     public void print() throws IOException {
         Board board = new Board();
-        BoardCLI bcli = new BoardCLI();
+        BoardCLI bcli = new BoardCLI(board);
         ByteArrayOutputStream bo = new ByteArrayOutputStream();
         System.setOut(new PrintStream(bo));
 
@@ -29,7 +29,7 @@ public class BoardCLITest {
     @Test
     public void displayShips() throws IOException {
         Board board = new Board();
-        BoardCLI bcli = new BoardCLI();
+        BoardCLI bcli = new BoardCLI(board);
 
         board.setTotalPositions(100);
         board.setPositions();
@@ -43,6 +43,10 @@ public class BoardCLITest {
         bo.flush();
         String inputLines = new String(bo.toByteArray());
 
-        assertTrue(inputLines.contains("|  S  |  S  |  S  |"));
+        assertTrue(inputLines.contains("|  P  |"));
+        assertTrue(inputLines.contains("|  A  |"));
+        assertTrue(inputLines.contains("|  C  |"));
+        assertTrue(inputLines.contains("|  D  |"));
+        assertTrue(inputLines.contains("|  S  |"));
     }
 }

@@ -3,6 +3,7 @@ package battleshipipm;
 import java.util.ArrayList;
 import java.util.Map;
 
+
 public class Board {
 
     private int totalPositions;
@@ -47,7 +48,7 @@ public class Board {
             Integer[] shipPosition = this.calcShipPosition(ship);
 
             ship.setPosition(shipPosition);
-            this.ships.add(ship);
+            this.getShips().add(ship);
         }
     }
 
@@ -56,25 +57,33 @@ public class Board {
         Integer shipOrigin = this.getShipOrigin(ship.getSize());
         Integer[] shipPosition = new Integer[ship.getSize()];
 
+        int random = (int)(Math.random() * 2);
+        int shipAxis = (random == 0) ? 1 : 10;
+
         for(int i = 0; i < ship.getSize(); i++){
-            shipPosition[i] = shipOrigin + i;
-            this.getFilledPositions().add(shipOrigin + i);
+            int shipSquare = shipOrigin + i * shipAxis;
+            shipPosition[i] = shipSquare;
+            this.getFilledPositions().add(shipSquare);
             String shipType = ship.getType();
             this.getShipMarkers().add(Character.toString(shipType.charAt(0)));
         }
         return shipPosition;
     }
 
-    private int getShipOrigin(int size){
+    private int getShipOrigin(int shipSize){
 
         int shipOrigin = (int)(Math.random() * this.getTotalPositions());
-        for(int i = 0; i < size; i++){
+        for(int i = 0; i < shipSize; i++){
             if(this.getFilledPositions().contains(shipOrigin + i)){
-                return this.getShipOrigin(size);
+                return this.getShipOrigin(shipSize);
+            } else if (this.getFilledPositions().contains(shipOrigin + (i * 10))){
+                return this.getShipOrigin(shipSize);
             }
         }
-        if(((shipOrigin % this.getRowSize()) + size) > this.getRowSize()){
-            return this.getShipOrigin(size);
+        if(((shipOrigin % this.getRowSize()) + shipSize) > this.getRowSize()){
+            return this.getShipOrigin(shipSize);
+        } else if (((shipOrigin + (shipSize * this.getRowSize())) > this.getTotalPositions())){
+            return this.getShipOrigin(shipSize);
         }
         return shipOrigin;
     }
