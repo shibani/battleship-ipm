@@ -7,10 +7,10 @@ import java.util.Scanner;
 
 public class CLI {
 
-     private String welcomeString =
-            "==============================\n" +
-            "    Welcome to Battleship     \n" +
-            "==============================\n";
+    private String welcomeString =
+                    "==============================\n" +
+                    "    Welcome to Battleship     \n" +
+                    "==============================\n";
 
     private String getPlayerNameString = "Enter your Player Name:\n" +
             "(Name should contain only numbers and alphabets. Name should not be empty)\n";
@@ -22,7 +22,7 @@ public class CLI {
     private String gameOver = "You won";
 
 
-    public String setup() throws IOException {
+    public String setup() {
         this.welcome(this.welcomeString);
         this.askForPlayerName(this.getPlayerNameString);
         return this.getPlayerNameInput(this.getPlayerNameString);
@@ -44,66 +44,59 @@ public class CLI {
         System.out.print(message);
     }
 
-    public String getPlayerNameInput(String str) throws IOException {
+    public String getPlayerNameInput(String str) {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        String input = br.readLine();
-        String output = "";
+        String errorMessage = "Please enter a valid name: ";
+        boolean invalid = true;
+        String output = null;
 
-        try {
-            output = input.trim();
-            if (output.length() < 1){
-                System.out.print("Name cannot be empty. Please try again.\n");
-                this.askForPlayerName(str);
-                this.getPlayerNameInput(str);
-            } else {
-                System.out.print("You selected " + output + "\n");
+        do {
+            try {
+                output = (br.readLine());
+                if(output.trim().length() > 1){
+                    System.out.print("You selected " + output.trim() + "\n");
+                    invalid = false;
+                } else {
+                    System.out.print("Name cannot be empty. Please try again.\n");
+                    this.askForPlayerName(str);
+                }
+            } catch(NullPointerException e) {
+                System.out.print(errorMessage);
+            } catch(IOException e) {
+                e.printStackTrace();
             }
-        } catch(NullPointerException e) {
-            System.out.print("Caught NullPointerException");
-        }
+        } while(invalid);
 
-        /*Scanner sc = new Scanner(System.in);
-        String output = "";
-        try{
-            output = sc.next().trim();
-            sc.nextLine();
-            if (output.length() > 1){
-                System.out.print("You selected " + output + "\n");
-            } else {
-                System.out.print("Name cannot be empty. Please try again.\n");
-                this.askForPlayerName(str);
-                this.getPlayerNameInput(str);
-            }
-        } catch (NullPointerException e){
-            System.out.print("Caught NullPointerException");
-        }
-        System.out.println("output to send: " + output);
-        sc.close();*/
-        //System.out.println("output to send: " + output);
         return output;
     }
 
-    public String getPlayerMoveInput(String str, String name) throws IOException {
+    public String getPlayerMoveInput(String str, String name) {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        String input = br.readLine();
+        String errorMessage = "Please enter a valid move: ";
+        String output = null;
+        boolean invalid = true;
 
-        String output = "";
-        try {
-            output = input.trim();
-            if (output.length() > 1){
-                System.out.print("You selected " + output + "\n");
-            } else {
-                System.out.print("Move cannot be empty. Please try again.\n");
-                this.askForPlayerMove(str, name);
-                this.getPlayerMoveInput(str, name);
+        do{
+            try{
+                output = br.readLine();
+                if(output.trim().length() > 1){
+                    System.out.print("You selected " + output.trim() + "\n");
+                    invalid = false;
+                } else {
+                    System.out.print("Move cannot be empty. Please try again.\n");
+                    this.askForPlayerMove(str, name);
+                }
+            } catch(NullPointerException e) {
+                System.out.print(errorMessage);
+            } catch(IOException e) {
+                e.printStackTrace();
             }
-        } catch(NullPointerException e) {
-            System.out.print("Caught NullPointerException");
-        }
+        } while(invalid);
+
         return output;
     }
 
-    public String getPlayerMove(String playerName) throws IOException {
+    public String getPlayerMove(String playerName) {
         this.askForPlayerMove(this.getPlayerMoveString, playerName);
         return this.getPlayerMoveInput(this.getPlayerMoveString, playerName);
     }

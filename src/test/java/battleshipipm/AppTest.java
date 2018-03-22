@@ -39,20 +39,9 @@ public class AppTest {
         initMocks(this);
     }
 
-    @Ignore
-    public void start() throws Exception {
-        //PowerMockito.mockStatic(App.class);
-        CLI testCli = Mockito.mock(CLI.class);
-        App testApp = Mockito.mock(App.class);
-        PowerMockito.when(testCli.setup()).thenReturn("Player1");
-        App.start();
-        //testApp.playGame();
-        //verify(testCli, times(1)).setup();
-        assertEquals("Player1", testCli.setup());
-    }
 
     @Test
-    public void playGame() throws IOException {
+    public void playGame() {
         App testApp = new App(mockedCli, mockedGame);
         App spyApp = Mockito.spy(testApp);
 
@@ -65,7 +54,7 @@ public class AppTest {
     }
 
     @Test
-    public void playGame1() throws IOException {
+    public void playGame1() {
         App testApp = new App(mockedCli, mockedGame);
         App spyApp = Mockito.spy(testApp);
 
@@ -78,7 +67,7 @@ public class AppTest {
     }
 
     @Test
-    public void playGame2() throws IOException {
+    public void playGame2() {
         App testApp = new App(mockedCli, mockedGame);
         App spyApp = Mockito.spy(testApp);
 
@@ -91,7 +80,7 @@ public class AppTest {
     }
 
     @Test
-    public void playGame3() throws IOException {
+    public void playGame3() {
         App testApp = new App(mockedCli, mockedGame);
         App spyApp = Mockito.spy(testApp);
 
@@ -104,14 +93,14 @@ public class AppTest {
     }
 
     @Test
-    public void setup() throws IOException {
+    public void setup() {
         mockedApp.setup();
 
         verify(mockedCli, times(1)).setup();
     }
 
     @Test
-    public void setup2() throws IOException {
+    public void setup2() {
         when(mockedCli.setup()).thenReturn(("Player1"));
         mockedApp.setup();
 
@@ -119,7 +108,7 @@ public class AppTest {
     }
 
     @Test
-    public void gameLoop() throws IOException {
+    public void gameLoop() {
         when(mockedCli.getPlayerMove(anyString())).thenReturn("d3");
         when(mockedGame.convertPlayerMoveToInt(anyString())).thenReturn(30);
         when(mockedGame.validMove(anyInt())).thenReturn(true);
@@ -132,7 +121,7 @@ public class AppTest {
     }
 
     @Test
-    public void gameLoop1() throws IOException {
+    public void gameLoop1() {
         when(mockedCli.getPlayerMove(anyString())).thenReturn("d3");
         when(mockedGame.convertPlayerMoveToInt(anyString())).thenReturn(30);
         when(mockedGame.validMove(anyInt())).thenReturn(true);
@@ -145,7 +134,7 @@ public class AppTest {
     }
 
     @Test
-    public void gameLoop2() throws IOException {
+    public void gameLoop2() {
         when(mockedCli.getPlayerMove(anyString())).thenReturn("d3");
         when(mockedGame.convertPlayerMoveToInt(anyString())).thenReturn(30);
         when(mockedGame.validMove(anyInt())).thenReturn(true);
@@ -158,7 +147,7 @@ public class AppTest {
     }
 
     @Test
-    public void gameLoop3() throws IOException {
+    public void gameLoop3() {
         when(mockedCli.getPlayerMove(anyString())).thenReturn("d3");
         when(mockedGame.convertPlayerMoveToInt(anyString())).thenReturn(30);
         when(mockedGame.validMove(anyInt())).thenReturn(true);
@@ -171,7 +160,7 @@ public class AppTest {
     }
 
     @Test
-    public void gameLoop4() throws IOException {
+    public void gameLoop4() {
         when(mockedCli.getPlayerMove(anyString())).thenReturn("d3");
         when(mockedGame.convertPlayerMoveToInt(anyString())).thenReturn(30);
         when(mockedGame.validMove(anyInt())).thenReturn(true);
@@ -184,7 +173,7 @@ public class AppTest {
     }
 
     @Test
-    public void gameLoop5() throws IOException {
+    public void gameLoop5() {
         Player testPlayer = new Player("Player1");
         when(mockedCli.getPlayerMove(anyString())).thenReturn("d3");
         when(mockedGame.convertPlayerMoveToInt(anyString())).thenReturn(30);
@@ -197,7 +186,7 @@ public class AppTest {
     }
 
     @Test
-    public void gameLoop6() throws IOException {
+    public void gameLoop6() {
         when(mockedCli.getPlayerMove(anyString())).thenReturn("d3");
         when(mockedGame.convertPlayerMoveToInt(anyString())).thenReturn(30);
         when(mockedGame.validMove(anyInt())).thenReturn(false).thenReturn(false).thenReturn(true);
@@ -217,10 +206,9 @@ public class AppTest {
     }
 
     @Test
-    public void endGame() throws IOException {
+    public void endGame() {
         when(mockedApp.gameOver()).thenReturn(true);
         mockedApp.playGame();
-        verify(mockedCli, times(1)).endGame((Player) isNull());
+        verify(mockedCli, times(1)).endGame(isNull());
     }
 }
-
