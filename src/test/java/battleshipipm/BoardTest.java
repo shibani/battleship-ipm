@@ -1,5 +1,6 @@
 package battleshipipm;
 
+import org.junit.Assert;
 import org.junit.Test;
 
 import java.lang.reflect.Array;
@@ -8,6 +9,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import static net.bytebuddy.matcher.ElementMatchers.anyOf;
+import static net.bytebuddy.matcher.ElementMatchers.is;
 import static org.junit.Assert.*;
 
 public class BoardTest {
@@ -91,12 +94,12 @@ public class BoardTest {
     }
 
     @Test
-    public void getFilledPositions() {
+    public void getFilledShipPositions() {
         final Board board = new Board();
         board.setTotalPositions(100);
         board.setShips();
 
-        assertEquals(17, board.getFilledPositions().size());
+        assertEquals(17, board.getFilledShipPositions().size());
     }
 
     @Test
@@ -105,7 +108,7 @@ public class BoardTest {
         board.setTotalPositions(100);
         board.setShips();
 
-
+        assertEquals(17, board.getShipMarkers().size());
     }
 
     @Test
@@ -126,5 +129,87 @@ public class BoardTest {
         board.setRowSize();
 
         assertEquals(10, board.getRowSize());
+    }
+
+    @Test
+    public void coordsToPosition() {
+        String testCoords = "g5";
+        final Board testBoard = new Board();
+        int result = testBoard.coordsToPosition(testCoords);
+        final String testCoordsAlpha = Character.toString(testCoords.charAt(0)).toUpperCase();
+        final int testCoordsInt = Character.getNumericValue(testCoords.charAt(testCoords.length() - 1));
+        int alphaIndex = Arrays.asList(BoardCLI.alpha).indexOf(testCoordsAlpha);
+        int coordsInt = (alphaIndex * 10) + testCoordsInt;
+
+        assertEquals(coordsInt, result);
+    }
+
+    @Test
+    public void isEmpty() {
+        String testCoords = "g5";
+        final Board testBoard = new Board();
+        testBoard.setTotalPositions(100);
+        testBoard.setPositions();
+        int testPosition = testBoard.coordsToPosition(testCoords);
+        boolean result = testBoard.isEmpty(testPosition);
+
+        assertEquals(true, result);
+    }
+
+    @Test
+    public void addMarker() {
+        final Board testBoard = new Board();
+        testBoard.setTotalPositions(100);
+        testBoard.setPositions();
+        testBoard.addMarker(30);
+
+        String testString = testBoard.getPositions().get(30);
+        assertTrue("X".equals(testString) || "n".equals(testString));
+    }
+
+    @Test
+    public void isEmpty1() {
+        final Board testBoard = new Board();
+        testBoard.setTotalPositions(100);
+        testBoard.setPositions();
+        testBoard.addMarker(35);
+
+        boolean result = testBoard.isEmpty(35);
+
+        assertEquals(false, result);
+    }
+
+    @Test
+    public void checkForHit() {
+        final Board testBoard = new Board();
+        testBoard.setTotalPositions(100);
+        testBoard.setPositions();
+        testBoard.setShips();
+        int position = testBoard.getFilledShipPositions().get(0);
+        if(testBoard.isEmpty(position)){
+            testBoard.addMarker(position);
+        }
+
+        String result = testBoard.checkForHit(position);
+        assertEquals("hit", result);
+    }
+
+    @Test
+    public void isFull() {
+        final Board testBoard = new Board();
+        testBoard.setTotalPositions(5);
+        testBoard.setPositions();
+        testBoard.addMarker(0);
+        testBoard.addMarker(1);
+        testBoard.addMarker(2);
+        testBoard.addMarker(3);
+        testBoard.addMarker(4);
+
+        assertTrue(testBoard.isFull());
+    }
+
+    @Test
+    public void shipsAreSunk() {
+
     }
 }

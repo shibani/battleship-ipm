@@ -7,6 +7,7 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
+import org.mockito.Spy;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.mockito.stubbing.OngoingStubbing;
 
@@ -36,12 +37,12 @@ public class CLITest {
     }
 
     @Test
-    public void getPlayerName() throws IOException {
+    public void askForPlayerName() throws IOException {
         ByteArrayOutputStream bo = new ByteArrayOutputStream();
         System.setOut(new PrintStream(bo));
 
         CLI testCLI = new CLI();
-        testCLI.getPlayerName("Enter your Player Name:");
+        testCLI.askForPlayerName("Enter your Player Name:");
 
         bo.flush();
         String inputLines = new String(bo.toByteArray());
@@ -51,7 +52,6 @@ public class CLITest {
 
     @Test
     public void getPlayerNameInput() throws IOException {
-
         byte[] data = "Test".getBytes();
         InputStream input = new ByteArrayInputStream(data);
         System.setIn(input);
@@ -78,8 +78,10 @@ public class CLITest {
     }
 
     @Mock
+    private Player mockedPlayer;
+
+    @Mock
     private CLI mockedCli;
-    private App mockedApp;
 
     @Before
     public void beforeSetup() {
@@ -89,7 +91,49 @@ public class CLITest {
     @Test
     public void setup() throws IOException {
         when(mockedCli.setup()).thenReturn("testPlayer");
-
         assertEquals("testPlayer", mockedCli.setup());
+    }
+
+    @Test
+    public void getPlayerMove() throws IOException {
+        when(mockedCli.getPlayerMove("testPlayer")).thenCallRealMethod();
+        mockedCli.getPlayerMove("testPlayer");
+
+        verify(mockedCli, times(1)).askForPlayerMove(null, "testPlayer");
+    }
+
+    @Test
+    public void getPlayerMove1() throws IOException {
+        doNothing().when(mockedCli).askForPlayerMove("test", "testPlayer");
+        when(mockedCli.getPlayerMoveInput("test", "testPlayer")).thenReturn("3");
+        when(mockedCli.getPlayerMove("testPlayer")).thenCallRealMethod();
+        mockedCli.getPlayerMove("testPlayer");
+
+        verify(mockedCli, times(1)).getPlayerMoveInput(null, "testPlayer");
+    }
+
+    @Test
+    public void askForPlayerMove() throws IOException {
+        ByteArrayOutputStream bo = new ByteArrayOutputStream();
+        System.setOut(new PrintStream(bo));
+
+        CLI testCLI = new CLI();
+        testCLI.askForPlayerMove(" test", "testPlayer");
+
+        bo.flush();
+        String inputLines = new String(bo.toByteArray());
+        assertTrue(inputLines.contains("testPlayer test"));
+    }
+
+    @Test
+    public void getPlayerMoveInput() throws IOException {
+        byte[] data = "Test".getBytes();
+        InputStream input = new ByteArrayInputStream(data);
+        System.setIn(input);
+
+        CLI testCLI = new CLI();
+        String testResult = testCLI.getPlayerMoveInput("test", "testPlayer");
+
+        assertEquals("Test", testResult);
     }
 }

@@ -1,6 +1,7 @@
 package battleshipipm;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Map;
 
 
@@ -11,7 +12,7 @@ public class Board {
 
     private ArrayList<String> positions = new ArrayList<>();
     private ArrayList<Ship> ships = new ArrayList<>();
-    private ArrayList<Integer> filledPositions = new ArrayList<>();
+    private ArrayList<Integer> filledShipPositions = new ArrayList<>();
     private ArrayList<String> shipMarkers = new ArrayList<>();
 
     public void setPositions(){
@@ -63,7 +64,7 @@ public class Board {
         for(int i = 0; i < ship.getSize(); i++){
             int shipSquare = shipOrigin + i * shipAxis;
             shipPosition[i] = shipSquare;
-            this.getFilledPositions().add(shipSquare);
+            this.getFilledShipPositions().add(shipSquare);
             String shipType = ship.getType();
             this.getShipMarkers().add(Character.toString(shipType.charAt(0)));
         }
@@ -74,9 +75,9 @@ public class Board {
 
         int shipOrigin = (int)(Math.random() * this.getTotalPositions());
         for(int i = 0; i < shipSize; i++){
-            if(this.getFilledPositions().contains(shipOrigin + i)){
+            if(this.getFilledShipPositions().contains(shipOrigin + i)){
                 return this.getShipOrigin(shipSize);
-            } else if (this.getFilledPositions().contains(shipOrigin + (i * 10))){
+            } else if (this.getFilledShipPositions().contains(shipOrigin + (i * 10))){
                 return this.getShipOrigin(shipSize);
             }
         }
@@ -92,8 +93,8 @@ public class Board {
         return this.ships;
     }
 
-    public ArrayList<Integer> getFilledPositions(){
-        return this.filledPositions;
+    public ArrayList<Integer> getFilledShipPositions(){
+        return this.filledShipPositions;
     }
 
     public ArrayList<String> getShipMarkers(){
@@ -106,5 +107,46 @@ public class Board {
 
     public int getRowSize(){
         return this.rowSize;
+    }
+
+    public int coordsToPosition(String string){
+        String coords = string.trim();
+        String coordAlpha = (Character.toString(coords.charAt(0)).toUpperCase());
+        int num = Character.getNumericValue(coords.charAt(coords.length() - 1));
+
+        int index = Arrays.asList(BoardCLI.alpha).indexOf(coordAlpha);
+        return (index * 10) + num;
+    }
+
+    public boolean isEmpty(int position){
+        return this.getPositions().get(position).equals(" ");
+    }
+
+    public void addMarker(int position){
+        if (this.isEmpty(position)){
+            if(this.getFilledShipPositions().contains(position)){
+                this.getPositions().set(position, "X");
+            } else {
+                this.getPositions().set(position, "n");
+            }
+        }
+    }
+
+    public String checkForHit(int position){
+        String status;
+        if(this.getFilledShipPositions().contains(position)){
+            status = "hit";
+        } else {
+            status = "miss";
+        }
+        return status;
+    }
+
+    public boolean isFull(){
+        return !this.getPositions().contains(" ");
+    }
+
+    public boolean shipsAreSunk(){
+        return true;
     }
 }
