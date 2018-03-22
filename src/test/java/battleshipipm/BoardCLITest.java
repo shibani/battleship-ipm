@@ -64,4 +64,19 @@ public class BoardCLITest {
 
         assertTrue(inputLines.contains("Player1, that was a hit!"));
     }
+
+    @Test
+    public void printSunkStatus() throws IOException {
+        Board board = new Board();
+        BoardCLI bcli = new BoardCLI(board);
+        ByteArrayOutputStream bo = new ByteArrayOutputStream();
+        System.setOut(new PrintStream(bo));
+
+        bcli.printSunkStatus("Player1", "Patrol Boat");
+
+        bo.flush();
+        String inputLines = new String(bo.toByteArray());
+
+        assertTrue(inputLines.contains("Player1, you sunk the Patrol Boat!"));
+    }
 }

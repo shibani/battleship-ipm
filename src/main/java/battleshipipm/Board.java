@@ -2,6 +2,7 @@ package battleshipipm;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.Map;
 
 
@@ -14,6 +15,7 @@ public class Board {
     private ArrayList<Ship> ships = new ArrayList<>();
     private ArrayList<Integer> filledShipPositions = new ArrayList<>();
     private ArrayList<String> shipMarkers = new ArrayList<>();
+    private HashMap<String, Integer> hitCount = new HashMap<>();
 
     public void setPositions(){
         int i = 0;
@@ -153,5 +155,40 @@ public class Board {
             }
         }
         return true;
+    }
+
+    public String shipIsSunk(int position){
+        int markerIndex = this.getFilledShipPositions().indexOf(position);
+        String marker = this.getShipMarkers().get(markerIndex);
+        this.setCurrentHitCount(marker);
+
+        int alphaSize = this.totalMarkerCount(marker);
+
+        int currentHitCount = this.getCurrentHitCount(marker);
+
+        if(currentHitCount == alphaSize){
+            return marker;
+        } else {
+            return "none";
+        }
+    }
+
+    public int totalMarkerCount(String marker){
+        int alphaSize = 0;
+        for (String alpha : this.getShipMarkers()){
+            if(alpha.equals(marker)){
+                alphaSize++;
+            }
+        }
+        return alphaSize;
+    }
+
+    public void setCurrentHitCount(String marker){
+        int value = hitCount.getOrDefault(marker, 0);
+        hitCount.put(marker, value+1);
+    }
+
+    public int getCurrentHitCount(String marker){
+        return hitCount.get(marker);
     }
 }

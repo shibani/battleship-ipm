@@ -53,9 +53,8 @@ public class Game {
         return (this.getBoard().isEmpty(position));
     }
 
-    public String makeMove(int move){
-        this.board.addMarker(move);
-        return this.board.checkForHit(move);
+    public void makeMove(int move){
+        this.getBoard().addMarker(move);
     }
 
     public int convertPlayerMoveToInt(String move){
@@ -66,8 +65,18 @@ public class Game {
         this.getBoardCli().print(this.getBoard());
     }
 
-    public void printStatus(String name, String status){
-        this.getBoardCli().printStatus(name, status);
+    public void printStatus(String name, int position){
+        String status = this.getBoard().checkForHit(position);
+        if(status.equals("hit")){
+            String shipType = this.getBoard().shipIsSunk(position);
+            if(shipType.equals("none")){
+                this.getBoardCli().printStatus(name, status);
+            } else {
+                this.getBoardCli().printSunkStatus(name, shipType);
+            }
+        } else {
+            this.getBoardCli().printStatus(name, status);
+        }
     }
 
     public boolean isOver(){

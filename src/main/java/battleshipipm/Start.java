@@ -4,8 +4,12 @@ import java.io.IOException;
 
 public class Start {
 
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) {
 
-        App.start();
+        CLI cli = new CLI();
+        Game game = new Game();
+        App app = new App(cli, game);
+
+        app.playGame();
     }
 }
