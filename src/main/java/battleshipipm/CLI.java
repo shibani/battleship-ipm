@@ -16,7 +16,7 @@ public class CLI {
 
     private String getPlayerMoveString = ", enter your move with one letter for the row and one digit for the column, e.g 'd9':\n";
 
-    private String tryAgainString = "That position is already filled. Please try again.";
+    private String tryAgainString = "That position is already filled. Please try again.\n";
 
 
     public String setup() throws IOException {

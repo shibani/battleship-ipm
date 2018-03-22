@@ -36,8 +36,48 @@ public class AppTest {
 
     @Ignore
     public void start() throws IOException {
+        //Powermockito - test class method here
         App.start();
-        verify(mockedApp, times(1)).setup();
+        verify(mockedApp, times(1)).playGame();
+    }
+
+    @Test
+    public void playGame() throws IOException {
+        App testApp = new App(mockedCli, mockedGame);
+        App spyApp = Mockito.spy(testApp);
+
+        when(spyApp.setup()).thenReturn(mockedPlayer);
+        when(spyApp.gameOver()).thenReturn(false).thenReturn(true);
+        doNothing().when(spyApp).gameLoop(mockedPlayer);
+        spyApp.playGame();
+
+        verify(spyApp, times(2)).setup();
+    }
+
+    @Test
+    public void playGame1() throws IOException {
+        App testApp = new App(mockedCli, mockedGame);
+        App spyApp = Mockito.spy(testApp);
+
+        when(spyApp.setup()).thenReturn(mockedPlayer);
+        when(spyApp.gameOver()).thenReturn(false).thenReturn(true);
+        doNothing().when(spyApp).gameLoop(mockedPlayer);
+        spyApp.playGame();
+
+        verify(spyApp, times(1)).gameLoop(mockedPlayer);
+    }
+
+    @Test
+    public void playGame2() throws IOException {
+        App testApp = new App(mockedCli, mockedGame);
+        App spyApp = Mockito.spy(testApp);
+
+        when(spyApp.setup()).thenReturn(mockedPlayer);
+        when(spyApp.gameOver()).thenReturn(true);
+        doNothing().when(spyApp).gameLoop(mockedPlayer);
+        spyApp.playGame();
+
+        verify(spyApp, times(2)).gameOver();
     }
 
     @Test
@@ -136,8 +176,6 @@ public class AppTest {
 
     @Test
     public void gameLoop6() throws IOException {
-        App testMockedApp = mock(App.class);
-
         when(mockedCli.getPlayerMove(anyString())).thenReturn("d3");
         when(mockedGame.convertPlayerMoveToInt(anyString())).thenReturn(30);
         when(mockedGame.validMove(anyInt())).thenReturn(false).thenReturn(false).thenReturn(true);
@@ -151,9 +189,9 @@ public class AppTest {
 
     @Test
     public void gameOver() {
-
+        mockedApp.gameOver();
+        verify(mockedGame, times(1)).isOver();
     }
 }
-
 
 
