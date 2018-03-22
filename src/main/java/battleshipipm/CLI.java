@@ -47,15 +47,13 @@ public class CLI {
         do {
             try {
                 output = (br.readLine());
-                if(output.trim().length() > 1){
+                if (output.trim().length() > 1) {
                     System.out.print("You selected " + output.trim() + "\n");
                     invalid = false;
                 } else {
                     System.out.print("Name cannot be empty. Please try again.\n");
                     this.askForPlayerName();
                 }
-            } catch(NullPointerException e) {
-                System.out.print(errorMessage);
             } catch(IOException e) {
                 e.printStackTrace();
             }
@@ -89,8 +87,6 @@ public class CLI {
                     System.out.print("Move cannot be empty. Please try again.\n");
                     this.askForPlayerMove(str, name);
                 }
-            } catch(NullPointerException e) {
-                System.out.print(errorMessage);
             } catch(IOException e) {
                 e.printStackTrace();
             }
