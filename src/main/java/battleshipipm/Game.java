@@ -4,18 +4,35 @@ import java.io.IOException;
 
 public class Game {
 
-    private CLI cli;
+    private Board board;
+    private BoardCLI boardCli;
 
-    Game(CLI cli){
-        this.cli = cli;
+    Game(){
+        this.board = null;
+        this.boardCli = null;
     }
 
-    public void start() throws IOException {
+    private void setBoard(int size){
+        this.board = new Board();
+        this.board.setTotalPositions(size);
+        this.board.setPositions();
+    }
 
-        this.cli.welcome();
+    public Board getBoard() {
+        return board;
+    }
 
-        this.cli.getPlayerName();
+    private void setBoardCli(){
+        this.boardCli = new BoardCLI();
+    }
 
-        this.cli.getPlayerNameInput();
+    public BoardCLI getBoardCli() {
+        return boardCli;
+    }
+
+    public void config(){
+        this.setBoard(100);
+        this.setBoardCli();
+        this.getBoardCli().print(this.getBoard());
     }
 }

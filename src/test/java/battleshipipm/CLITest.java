@@ -1,10 +1,21 @@
 package battleshipipm;
 
+import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.Mockito;
+import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.stubbing.OngoingStubbing;
+
 import java.io.*;
 
 import static junit.framework.TestCase.assertEquals;
 import static junit.framework.TestCase.assertTrue;
+import static org.mockito.Mockito.*;
+import static org.mockito.MockitoAnnotations.initMocks;
 
 
 public class CLITest {
@@ -16,7 +27,7 @@ public class CLITest {
         System.setOut(new PrintStream(bo));
 
         CLI testCLI = new CLI();
-        testCLI.welcome();
+        testCLI.welcome("Welcome to Battleship");
 
         bo.flush();
         String inputLines = new String(bo.toByteArray());
@@ -30,12 +41,12 @@ public class CLITest {
         System.setOut(new PrintStream(bo));
 
         CLI testCLI = new CLI();
-        testCLI.getPlayerName();
+        testCLI.getPlayerName("Enter your Player Name:");
 
         bo.flush();
         String inputLines = new String(bo.toByteArray());
 
-        assertTrue(inputLines.contains("Enter your Player Name:\n(Name should contain only numbers and alphabets. Name should not be empty)"));
+        assertTrue(inputLines.contains("Enter your Player Name:"));
     }
 
     @Test
@@ -46,22 +57,40 @@ public class CLITest {
         System.setIn(input);
 
         CLI testCLI = new CLI();
-        String testResult = testCLI.getPlayerNameInput();
+        String testResult = testCLI.getPlayerNameInput("test");
 
         assertEquals("Test", testResult);
     }
 
     @Test
-    public void getPlayerNameInput1() throws IOException {
+    public void printString() throws IOException {
+        ByteArrayOutputStream bo = new ByteArrayOutputStream();
+        System.setOut(new PrintStream(bo));
 
-        byte[] data = "".getBytes();
-        InputStream input = new ByteArrayInputStream(data);
-        System.setIn(input);
-
+        String str = "test";
         CLI testCLI = new CLI();
-        String testResult = testCLI.getPlayerNameInput();
+        testCLI.printString(str);
 
-        assertEquals("", testResult);
+        bo.flush();
+        String inputLines = new String(bo.toByteArray());
+
+        assertTrue(inputLines.contains("test"));
     }
 
+    @Mock
+    private CLI mockedCli;
+    private App mockedApp;
+
+
+    @Before
+    public void beforeSetup() {
+        initMocks(this);
+    }
+
+    @Test
+    public void setup2() throws IOException {
+        when(mockedCli.setup()).thenReturn("testPlayer");
+
+        assertEquals("testPlayer", mockedCli.setup());
+    }
 }
