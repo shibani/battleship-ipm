@@ -111,7 +111,7 @@ public class Board {
 
     public int coordsToPosition(String string){
         String coords = string.trim();
-        String coordAlpha = (Character.toString(coords.charAt(0)).toUpperCase());
+        String coordAlpha = Character.toString(coords.charAt(0)).toUpperCase();
         int num = Character.getNumericValue(coords.charAt(coords.length() - 1));
 
         int index = Arrays.asList(BoardCLI.alpha).indexOf(coordAlpha);
@@ -146,7 +146,12 @@ public class Board {
         return !this.getPositions().contains(" ");
     }
 
-    public boolean shipsAreSunk(){
+    public boolean allShipsAreSunk(){
+        for(Integer shipPosition: this.getFilledShipPositions()){
+            if(!this.getPositions().get(shipPosition).equals("X")) {
+                return false;
+            }
+        }
         return true;
     }
 }

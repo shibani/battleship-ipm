@@ -25,6 +25,9 @@ public class App {
         while(!this.gameOver()){
             this.gameLoop(player);
         }
+        if(this.gameOver()){
+            this.endGame(player);
+        }
     }
 
     public Player setup() throws IOException {
@@ -47,5 +50,9 @@ public class App {
 
     public boolean gameOver(){
         return this.game.isOver();
+    }
+
+    public void endGame(Player player){
+        this.cli.endGame(player);
     }
 }
