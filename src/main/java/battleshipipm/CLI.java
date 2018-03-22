@@ -21,19 +21,12 @@ public class CLI {
 
     private String gameOver = "You won";
 
-
-    public String setup() {
-        this.welcome(this.welcomeString);
-        this.askForPlayerName(this.getPlayerNameString);
-        return this.getPlayerNameInput(this.getPlayerNameString);
+    public void welcome(){
+        this.printString(this.welcomeString);
     }
 
-    public void welcome(String str){
-        this.printString(str);
-    }
-
-    public void askForPlayerName(String str) {
-        this.printString(str);
+    public void askForPlayerName() {
+        this.printString(this.getPlayerNameString);
     }
 
     public void askForPlayerMove(String str, String name){
@@ -44,9 +37,10 @@ public class CLI {
         System.out.print(message);
     }
 
-    public String getPlayerNameInput(String str) {
+    public String getPlayerNameInput() {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         String errorMessage = "Please enter a valid name: ";
+        String str = this.getPlayerNameString;
         boolean invalid = true;
         String output = null;
 
@@ -58,7 +52,7 @@ public class CLI {
                     invalid = false;
                 } else {
                     System.out.print("Name cannot be empty. Please try again.\n");
-                    this.askForPlayerName(str);
+                    this.askForPlayerName();
                 }
             } catch(NullPointerException e) {
                 System.out.print(errorMessage);
@@ -84,6 +78,9 @@ public class CLI {
                             && Character.isDigit(output.trim().charAt(1))){
                         System.out.print("You selected " + output.trim() + "\n");
                         invalid = false;
+                    } else if (output.trim().equals("exit")){
+                        System.out.print(name + ", thanks for playing!");
+                        System.exit(0);
                     } else {
                         System.out.print("Move must be one letter for the row and one number for the column. Please try again.\n");
                         this.askForPlayerMove(str, name);

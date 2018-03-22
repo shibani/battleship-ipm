@@ -15,6 +15,7 @@ import java.io.*;
 
 import static junit.framework.TestCase.assertEquals;
 import static junit.framework.TestCase.assertTrue;
+import static junit.framework.TestCase.fail;
 import static org.mockito.Mockito.*;
 import static org.mockito.MockitoAnnotations.initMocks;
 
@@ -28,7 +29,7 @@ public class CLITest {
         System.setOut(new PrintStream(bo));
 
         CLI testCLI = new CLI();
-        testCLI.welcome("Welcome to Battleship");
+        testCLI.welcome();
 
         bo.flush();
         String inputLines = new String(bo.toByteArray());
@@ -42,7 +43,7 @@ public class CLITest {
         System.setOut(new PrintStream(bo));
 
         CLI testCLI = new CLI();
-        testCLI.askForPlayerName("Enter your Player Name:");
+        testCLI.askForPlayerName();
 
         bo.flush();
         String inputLines = new String(bo.toByteArray());
@@ -51,13 +52,13 @@ public class CLITest {
     }
 
     @Test
-    public void getPlayerNameInput() throws IOException {
+    public void getPlayerNameInput() {
         byte[] data = "Test".getBytes();
         InputStream input = new ByteArrayInputStream(data);
         System.setIn(input);
 
         CLI testCLI = new CLI();
-        String testResult = testCLI.getPlayerNameInput("test");
+        String testResult = testCLI.getPlayerNameInput();
 
         assertEquals("Test", testResult);
     }
@@ -89,13 +90,7 @@ public class CLITest {
     }
 
     @Test
-    public void setup() throws IOException {
-        when(mockedCli.setup()).thenReturn("testPlayer");
-        assertEquals("testPlayer", mockedCli.setup());
-    }
-
-    @Test
-    public void getPlayerMove() throws IOException {
+    public void getPlayerMove() {
         when(mockedCli.getPlayerMove("testPlayer")).thenCallRealMethod();
         mockedCli.getPlayerMove("testPlayer");
 
@@ -103,7 +98,7 @@ public class CLITest {
     }
 
     @Test
-    public void getPlayerMove1() throws IOException {
+    public void getPlayerMove1() {
         doNothing().when(mockedCli).askForPlayerMove("test", "testPlayer");
         when(mockedCli.getPlayerMoveInput("test", "testPlayer")).thenReturn("3");
         when(mockedCli.getPlayerMove("testPlayer")).thenCallRealMethod();
@@ -126,16 +121,45 @@ public class CLITest {
     }
 
     @Test
-    public void getPlayerMoveInput() throws IOException {
-        byte[] data = "Test".getBytes();
+    public void getPlayerMoveInput() {
+        byte[] data = "f5".getBytes();
         InputStream input = new ByteArrayInputStream(data);
         System.setIn(input);
 
         CLI testCLI = new CLI();
-        String testResult = testCLI.getPlayerMoveInput("test", "testPlayer");
+        String testResult = testCLI.getPlayerMoveInput("f5", "Player1");
 
-        assertEquals("Test", testResult);
+
+        assertEquals("f5", testResult);
     }
+
+    /*@Test(expected=NullPointerException.class)
+    public void getPlayerMoveInput1() throws IOException {
+        byte[] data = "".getBytes();
+        InputStream input = new ByteArrayInputStream(data);
+        System.setIn(input);
+
+        CLI testCLI = new CLI();
+        fail(testCLI.getPlayerMoveInput(anyString(), anyString()));
+    }
+
+    @Test(expected=NullPointerException.class)
+    public void getPlayerMoveInput2() throws IOException {
+        byte[] data = "  ".getBytes();
+        InputStream input = new ByteArrayInputStream(data);
+        System.setIn(input);
+
+        ByteArrayOutputStream bo = new ByteArrayOutputStream();
+        System.setOut(new PrintStream(bo));
+
+        CLI testCLI = new CLI();
+        //String testResult = testCLI.getPlayerMoveInput("  ", "testPlayer");
+        String testResult = testCLI.getPlayerMoveInput(anyString(), anyString());
+
+        bo.flush();
+        String inputLines = new String(bo.toByteArray());
+        assertTrue(inputLines.contains("Move cannot be empty. Please try again.\n"));
+    }*/
 
     @Test
     public void tryAgain() throws IOException {

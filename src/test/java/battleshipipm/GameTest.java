@@ -159,7 +159,7 @@ public class GameTest {
     @Test
     public void printBoard() {
         doNothing().when(mockedBoardCli).print(mockedBoard);
-        mockedBoardCli.print(mockedBoard);
+        mockedGame.printBoard();
 
         verify(mockedBoardCli, times(1)).print(mockedBoard);
     }

@@ -181,11 +181,20 @@ public class BoardTest {
     }
 
     @Test
-    public void checkForHit() {
+    public void checkForHit() throws NoSuchFieldException, IllegalAccessException {
         final Board testBoard = new Board();
         testBoard.setTotalPositions(100);
         testBoard.setPositions();
-        testBoard.setShips();
+
+        ArrayList<Integer> shipPositions = new ArrayList<>();
+        shipPositions.add(9);
+        shipPositions.add(10);
+        shipPositions.add(11);
+
+        Field field = testBoard.getClass().getDeclaredField("filledShipPositions");
+        field.setAccessible(true);
+        field.set(testBoard, shipPositions);
+
         int position = testBoard.getFilledShipPositions().get(0);
         if(testBoard.isEmpty(position)){
             testBoard.addMarker(position);
@@ -193,6 +202,31 @@ public class BoardTest {
 
         String result = testBoard.checkForHit(position);
         assertEquals("hit", result);
+    }
+
+    @Test
+    public void checkForMiss() throws IllegalAccessException, NoSuchFieldException {
+        final Board testBoard = new Board();
+        testBoard.setTotalPositions(16);
+        testBoard.setPositions();
+
+        ArrayList<Integer> shipPositions = new ArrayList<>();
+        shipPositions.add(9);
+        shipPositions.add(10);
+        shipPositions.add(11);
+
+        Field field = testBoard.getClass().getDeclaredField("filledShipPositions");
+        field.setAccessible(true);
+        field.set(testBoard, shipPositions);
+
+        int position = 3;
+
+        if(testBoard.isEmpty(position)){
+            testBoard.addMarker(position);
+        }
+
+        String result = testBoard.checkForHit(position);
+        assertEquals("miss", result);
     }
 
     @Test

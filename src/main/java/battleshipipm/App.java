@@ -24,7 +24,10 @@ public class App {
     }
 
     public Player setup() {
-        String playerName = this.cli.setup();
+        this.cli.welcome();
+        this.cli.askForPlayerName();
+        String playerName = this.cli.getPlayerNameInput();
+        //String playerName = this.cli.setup();
         return this.game.config(playerName);
     }
 
