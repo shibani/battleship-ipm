@@ -10,7 +10,6 @@ public class Start {
         Game game = new Game();
         App app = new App(cli, game);
 
-        //App.start();
         app.playGame();
     }
 }

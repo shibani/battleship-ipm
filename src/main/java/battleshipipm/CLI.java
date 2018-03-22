@@ -80,8 +80,14 @@ public class CLI {
             try{
                 output = br.readLine();
                 if(output.trim().length() > 1){
-                    System.out.print("You selected " + output.trim() + "\n");
-                    invalid = false;
+                    if(output.trim().length() == 2 && Character.isLetter(output.trim().charAt(0))
+                            && Character.isDigit(output.trim().charAt(1))){
+                        System.out.print("You selected " + output.trim() + "\n");
+                        invalid = false;
+                    } else {
+                        System.out.print("Move must be one letter for the row and one number for the column. Please try again.\n");
+                        this.askForPlayerMove(str, name);
+                    }
                 } else {
                     System.out.print("Move cannot be empty. Please try again.\n");
                     this.askForPlayerMove(str, name);
