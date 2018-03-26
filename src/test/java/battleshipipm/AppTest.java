@@ -99,15 +99,15 @@ public class AppTest {
     public void setup1() {
         mockedApp.setup();
 
-        verify(mockedCli, times(1)).askForPlayerName();
+        verify(mockedCli, times(1)).getPlayerName();
     }
 
     @Test
     public void setup2() {
-        //when(mockedCli.setup()).thenReturn(("Player1"));
+        when(mockedCli.getPlayerName()).thenReturn(("Player1"));
         mockedApp.setup();
 
-        verify(mockedCli, times(1)).getPlayerNameInput();
+        verify(mockedGame, times(1)).config("Player1");
     }
 
     @Test

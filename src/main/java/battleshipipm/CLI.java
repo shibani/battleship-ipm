@@ -39,65 +39,29 @@ public class CLI {
     }
 
     public String getPlayerNameInput() {
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        String errorMessage = "Please enter a valid name: ";
-        String str = this.getPlayerNameString;
-        boolean invalid = true;
-        String output = null;
-
-        do {
-            try {
-                output = (br.readLine());
-                if (output.trim().length() > 1) {
-                    System.out.print("You selected " + output.trim() + "\n");
-                    invalid = false;
-                } else {
-                    System.out.print("Name cannot be empty. Please try again.\n");
-                    this.askForPlayerName();
-                }
-            } catch(IOException e) {
-                e.printStackTrace();
+        try {
+            String input = br.readLine();
+            if (input != null) {
+                return input.trim();
+            } else {
+                return "";
             }
-        } while(invalid);
-
-        return output;
+        } catch(IOException e) {
+            return getPlayerMoveInput();
+        }
     }
 
-    /*public String getPlayerMoveInput(String str, String name) {
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        String errorMessage = "Please enter a valid move: ";
-        String output = null;
-        boolean invalid = true;
-
-        do{
-            try{
-                output = br.readLine();
-                if(output.trim().length() > 1){
-                    if((output.trim().length() == 2) && Character.isLetter(output.trim().charAt(0))
-                            && Character.isDigit(output.trim().charAt(1)) && (output.trim().charAt(0) <= 'j')
-                            && (output.trim().charAt(1) <= 9)){
-                        System.out.print("You selected " + output.trim() + "\n");
-                        invalid = false;
-                    } else if (output.trim().equals("exit")){
-                        System.out.print(name + ", thanks for playing!");
-                        System.exit(0);
-                    } else {
-                        System.out.print("Move must be one letter for the row and one number for the column. Please try again.\n");
-                        this.askForPlayerMove(str, name);
-                    }
-                } else {
-                    System.out.print("Move cannot be empty. Please try again.\n");
-                    this.askForPlayerMove(str, name);
-                }
-            /*} catch(NullPointerException e){
-                e.printStackTrace();*//*
-            } catch(IOException e) {
-                e.printStackTrace();
-            }
-        } while(invalid);
-
+    public String parsePlayerNameInput(String str){
+        String output;
+        if(str.trim().length() > 1){
+            output = str.trim();
+            this.printString("You selected " + output.trim() + "\n");
+        } else {
+            output = "";
+            this.printString("Name cannot be empty. Please try again.\n");
+        }
         return output;
-    }*/
+    }
 
     public String getPlayerMoveInput() {
         try {
@@ -113,25 +77,59 @@ public class CLI {
     }
 
     public String parsePlayerMoveInput(String str, String name){
-        boolean invalid = true;
-        if((str.length() == 2) && Character.isLetter(str.charAt(0))
-                && Character.isDigit(str.charAt(1)) && (str.charAt(0) <= 'j')
-                && (str.charAt(1) <= 9)){
-            System.out.print("You selected " + str + "\n");
-            invalid = false;
-        } else if (str.equals("exit")){
-            System.out.print(name + ", thanks for playing!");
+        String output;
+        if ((str.length() == 2)
+                && Character.isLetter(str.charAt(0))
+                && Character.isDigit(str.charAt(1))
+                && (str.charAt(0) <= 'j')
+                && (str.charAt(1) <= '9')) {
+            output = str;
+            this.printString("You selected " + output + ".\n");
+        } else if (str.equals("exit")) {
+            output = "";
+            this.printString(name + ", thanks for playing!");
             System.exit(0);
         } else {
-            System.out.print("Move must be one letter for the row and one number for the column. Please try again.\n");
-            this.askForPlayerMove(str, name);
+            output = "";
+            this.printString("Move must be one letter for the row and one number for the column. Please try again.\n");
         }
-        return "";
+        return output;
+    }
+
+    public String getPlayerName(){
+        String result;
+        boolean invalid = true;
+        do {
+            this.askForPlayerName();
+            String input = this.getPlayerNameInput();
+            result = this.parsePlayerNameInput(input);
+            if(result.trim().length() > 1){
+                invalid = false;
+            }
+        } while (invalid);
+
+        return result;
     }
 
     public String getPlayerMove(String playerName) {
-        this.askForPlayerMove(this.getPlayerMoveString, playerName);
-        return this.getPlayerMoveInput();
+        String result;
+        boolean invalid = true;
+        do {
+            this.askForPlayerMove(this.getPlayerMoveString, playerName);
+            String str = this.getPlayerMoveInput();
+            result = this.parsePlayerMoveInput(str, playerName);
+            if(result.trim().length() > 1){
+                if ((str.length() == 2)
+                        && Character.isLetter(str.charAt(0))
+                        && Character.isDigit(str.charAt(1))
+                        && (str.charAt(0) <= 'j')
+                        && (str.charAt(1) <= '9')){
+                    invalid = false;
+                }
+            }
+        } while (invalid);
+
+        return result;
     }
 
     public void tryAgain(){
