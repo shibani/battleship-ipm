@@ -3,9 +3,10 @@ package battleshipipm;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.Scanner;
 
 public class CLI {
+    public InputStreamReader inputStreamReader = new InputStreamReader(System.in);
+    public BufferedReader br = new BufferedReader(inputStreamReader);
 
     private String welcomeString =
                     "==============================\n" +
@@ -62,7 +63,7 @@ public class CLI {
         return output;
     }
 
-    public String getPlayerMoveInput(String str, String name) {
+    /*public String getPlayerMoveInput(String str, String name) {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         String errorMessage = "Please enter a valid move: ";
         String output = null;
@@ -73,7 +74,8 @@ public class CLI {
                 output = br.readLine();
                 if(output.trim().length() > 1){
                     if((output.trim().length() == 2) && Character.isLetter(output.trim().charAt(0))
-                            && Character.isDigit(output.trim().charAt(1)) && (output.trim().charAt(0) <= 'j')){
+                            && Character.isDigit(output.trim().charAt(1)) && (output.trim().charAt(0) <= 'j')
+                            && (output.trim().charAt(1) <= 9)){
                         System.out.print("You selected " + output.trim() + "\n");
                         invalid = false;
                     } else if (output.trim().equals("exit")){
@@ -87,17 +89,49 @@ public class CLI {
                     System.out.print("Move cannot be empty. Please try again.\n");
                     this.askForPlayerMove(str, name);
                 }
+            /*} catch(NullPointerException e){
+                e.printStackTrace();*//*
             } catch(IOException e) {
                 e.printStackTrace();
             }
         } while(invalid);
 
         return output;
+    }*/
+
+    public String getPlayerMoveInput() {
+        try {
+            String input = br.readLine();
+            if (input != null) {
+                return input.trim();
+            } else {
+                return "";
+            }
+        } catch(IOException e) {
+            return getPlayerMoveInput();
+        }
+    }
+
+    public String parsePlayerMoveInput(String str, String name){
+        boolean invalid = true;
+        if((str.length() == 2) && Character.isLetter(str.charAt(0))
+                && Character.isDigit(str.charAt(1)) && (str.charAt(0) <= 'j')
+                && (str.charAt(1) <= 9)){
+            System.out.print("You selected " + str + "\n");
+            invalid = false;
+        } else if (str.equals("exit")){
+            System.out.print(name + ", thanks for playing!");
+            System.exit(0);
+        } else {
+            System.out.print("Move must be one letter for the row and one number for the column. Please try again.\n");
+            this.askForPlayerMove(str, name);
+        }
+        return "";
     }
 
     public String getPlayerMove(String playerName) {
         this.askForPlayerMove(this.getPlayerMoveString, playerName);
-        return this.getPlayerMoveInput(this.getPlayerMoveString, playerName);
+        return this.getPlayerMoveInput();
     }
 
     public void tryAgain(){
