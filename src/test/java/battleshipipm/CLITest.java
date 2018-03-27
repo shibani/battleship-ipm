@@ -307,6 +307,61 @@ public class CLITest {
     }
 
     @Test
+    public void parsePlayerMoveInputCanTurnOnDeveloperMode1() throws IOException {
+        ByteArrayOutputStream bo = new ByteArrayOutputStream();
+        System.setOut(new PrintStream(bo));
+
+        String str = "dev";
+        CLI testCli = new CLI();
+        Game testGame = new Game();
+        testCli.setGame(testGame);
+        testGame.setBoard(16);
+        Board testBoard = testGame.getBoard();
+        testGame.setBoardCli(testBoard);
+
+        testCli.parsePlayerMoveInput(str, "Player1");
+
+        bo.flush();
+        String inputLines = new String(bo.toByteArray());
+
+        assertTrue(inputLines.contains("Now entering developer mode"));
+    }
+
+    @Test
+    public void parsePlayerMoveInputCanTurnOffDeveloperMode1() throws IOException {
+        ByteArrayOutputStream bo = new ByteArrayOutputStream();
+        System.setOut(new PrintStream(bo));
+
+        String str = "off";
+        CLI testCli = new CLI();
+        Game testGame = new Game();
+        testCli.setGame(testGame);
+
+        testCli.parsePlayerMoveInput(str, "Player1");
+
+        bo.flush();
+        String inputLines = new String(bo.toByteArray());
+
+        assertTrue(inputLines.contains("Switching off developer mode"));
+    }
+
+
+    @Test
+    public void parsePlayerMoveInputCanTurnOffDeveloperMode2() {
+        CLI testCli = new CLI();
+        Game testGame = new Game();
+        String str = "off";
+
+        testCli.setGame(testGame);
+        testCli.parsePlayerMoveInput(str, "Player1");
+
+        //mockedCli.parsePlayerMoveInput(str, "Player1");
+        assertEquals("normal", testCli.getGame().getMode());
+    }
+
+
+
+    @Test
     public void parsePlayerMoveInputChecksIfArgIsEmptyString() throws IOException {
         ByteArrayOutputStream bo = new ByteArrayOutputStream();
         System.setOut(new PrintStream(bo));
@@ -473,5 +528,14 @@ public class CLITest {
         bo.flush();
         String inputLines = new String(bo.toByteArray());
         assertTrue(inputLines.contains("You won, Player 2!"));
+    }
+
+    @Test
+    public void setGame(){
+        final Game testGame = new Game();
+        final CLI testCli = new CLI();
+        testCli.setGame(testGame);
+
+        assertEquals(testGame, testCli.getGame());
     }
 }

@@ -17,14 +17,25 @@ public class BoardCLI {
         this.board = board;
     }
 
-    public void print(Board board){
+    public void printBoard(Board board, String mode){
         this.printHeader();
 
         ArrayList<String> positions = board.getPositions();
         int i = 0;
         while(i < board.getTotalPositions()) {
             this.printCellLeft();
-            this.printCellContent(positions, i);
+            if(mode.equals("dev")){
+                if(this.board.getPositions().get(i) == "X"){
+                    this.printCellContent(positions, i);
+                } else if (this.board.getFilledShipPositions().contains(i)) {
+                    int index = board.getFilledShipPositions().indexOf(i);
+                    System.out.print(board.getShipMarkers().get(index));
+                } else {
+                    System.out.print(this.board.getPositions().get(i));
+                }
+            } else {
+                this.printCellContent(positions, i);
+            }
             this.printCellRight(i);
             i++;
         }

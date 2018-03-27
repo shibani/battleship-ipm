@@ -7,6 +7,7 @@ import java.io.InputStreamReader;
 public class CLI {
     public InputStreamReader inputStreamReader = new InputStreamReader(System.in);
     public BufferedReader br = new BufferedReader(inputStreamReader);
+    private Game game;
 
     private String welcomeString =
                     "==============================\n" +
@@ -89,9 +90,18 @@ public class CLI {
             output = "";
             this.printString(name + ", thanks for playing!");
             System.exit(0);
-        } else {
+        } else if (str.equals("dev")) {
+            this.printString("Now entering developer mode\n");
+            this.getGame().printBoard(getGame().getBoard(), str);
+            this.getGame().setMode(str);
             output = "";
+        } else if (str.equals("off")) {
+            this.printString("Switching off developer mode\n");
+            this.getGame().setMode(str);
+            output = "";
+        } else {
             this.printString("Move must be one letter for the row and one number for the column. Please try again.\n");
+            output = "";
         }
         return output;
     }
@@ -138,5 +148,13 @@ public class CLI {
 
     public void endGame(Player player){
         this.printString(gameOver + ", " + player.getName() + "!");
+    }
+
+    public void setGame(Game game){
+        this.game = game;
+    }
+
+    public Game getGame(){
+        return game;
     }
 }

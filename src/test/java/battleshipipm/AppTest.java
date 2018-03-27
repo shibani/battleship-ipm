@@ -97,7 +97,6 @@ public class AppTest {
         verify(mockedCli, times(1)).welcome();
     }
 
-    @Test
     public void setup1() {
         mockedApp.setup();
 
@@ -110,6 +109,14 @@ public class AppTest {
         mockedApp.setup();
 
         verify(mockedGame, times(1)).config("Player1");
+    }
+
+    @Test
+    public void setupSetstheGameToReceiveMessagesBackFromTheCLI() {
+        when(mockedCli.getPlayerName()).thenReturn(("Player1"));
+        mockedApp.setup();
+
+        verify(mockedCli, times(1)).setGame(any(Game.class));
     }
 
     @Test

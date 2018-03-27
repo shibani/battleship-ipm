@@ -25,6 +25,7 @@ public class App {
 
     public Player setup() {
         this.cli.welcome();
+        this.cli.setGame(game);
         String playerName = this.cli.getPlayerName();
         return this.game.config(playerName);
     }

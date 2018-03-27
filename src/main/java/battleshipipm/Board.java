@@ -201,5 +201,4 @@ public class Board {
     public int getCurrentHitCount(String marker){
         return hitCount.get(marker);
     }
-
 }

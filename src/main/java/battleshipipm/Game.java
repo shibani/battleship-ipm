@@ -7,10 +7,12 @@ public class Game {
     private Board board;
     private BoardCLI boardCli;
     private Player player;
+    private String mode;
 
     Game(){
         this.board = null;
         this.boardCli = null;
+        this.mode = "normal";
     }
 
     public void setBoard(int size){
@@ -35,8 +37,7 @@ public class Game {
         this.setBoard(100);
         this.setBoardCli(this.getBoard());
         this.getBoard().setShips();
-        this.getBoardCli().print(this.getBoard());
-        //this.getBoardCli().displayShips(this.getBoard());
+        this.getBoardCli().printBoard(this.getBoard(), this.getMode());
         this.setPlayer(playerName);
         return this.getPlayer();
     }
@@ -62,7 +63,11 @@ public class Game {
     }
 
     public void printBoard(){
-        this.getBoardCli().print(this.getBoard());
+        this.getBoardCli().printBoard(this.getBoard(), this.getMode());
+    }
+
+    public void printBoard(Board board, String str){
+        this.getBoardCli().printBoard(board, str);
     }
 
     public void printStatus(String name, int position){
@@ -80,7 +85,18 @@ public class Game {
     }
 
     public boolean isOver(){
-        //return this.getBoard().isFull();
         return this.getBoard().allShipsAreSunk();
+    }
+
+    public void setMode(String str){
+        if(str.equals("off")){
+            this.mode = "normal";
+        } else if (str.equals("dev")) {
+            this.mode = "dev";
+        }
+    }
+
+    public String getMode(){
+        return this.mode;
     }
 }
