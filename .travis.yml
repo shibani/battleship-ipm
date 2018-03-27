@@ -1,9 +1,9 @@
 language: java
 
-branches:
-  only:
-    - master
-    - develop
+#branches:
+#  only:
+#    - master
+#    - develop
 
 jdk:
   - oraclejdk9

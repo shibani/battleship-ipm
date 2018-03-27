@@ -158,6 +158,7 @@ public class Board {
     }
 
     public String shipIsSunk(int position){
+
         int markerIndex = this.getFilledShipPositions().indexOf(position);
         String marker = this.getShipMarkers().get(markerIndex);
         this.setCurrentHitCount(marker);
@@ -166,8 +167,17 @@ public class Board {
 
         int currentHitCount = this.getCurrentHitCount(marker);
 
+        String shipType = null;
+
+        for(Ship ship : this.getShips()){
+            if(ship.getType().charAt(0) == marker.charAt(0)){
+                shipType = ship.getType();
+                break;
+            }
+        }
+
         if(currentHitCount == alphaSize){
-            return marker;
+            return shipType;
         } else {
             return "none";
         }
@@ -191,4 +201,5 @@ public class Board {
     public int getCurrentHitCount(String marker){
         return hitCount.get(marker);
     }
+
 }
