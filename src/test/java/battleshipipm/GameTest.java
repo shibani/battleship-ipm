@@ -1,5 +1,6 @@
 package battleshipipm;
 
+import org.hamcrest.core.IsNull;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -7,6 +8,9 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.PrintStream;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -30,7 +34,10 @@ public class GameTest {
     private BoardCLI mockedBoardCli;
 
     @Mock
-    private Player mockedPlayer;
+    private Human mockedHuman;
+
+    @Mock
+    private Computer mockedComputer;
 
     @InjectMocks
     private Game mockedGame;
@@ -204,15 +211,16 @@ public class GameTest {
     public void getCurrentBoard(){
         final Game testGame = new Game();
         testGame.config("Player1");
-        testGame.setCurrentPlayer();
+
+        assertEquals(testGame.getHuman().getBoard(), testGame.getCurrentPlayer().getBoard());
     }
 
     @Test
     public void printBoardNoArgs() {
         doNothing().when(mockedBoardCli).printBoard(mockedBoard, mockedGame.getMode());
-        mockedGame.printBoard(mockedBoard, mockedGame.getMode());
+        mockedGame.printBoard();
 
-        verify(mockedBoardCli, times(1)).printBoard(mockedBoard, mockedGame.getMode());
+        verify(mockedBoardCli, times(1)).printBoard((Board)isNull(), anyString());
     }
 
     @Test
@@ -329,12 +337,43 @@ public class GameTest {
     }
 
     @Test
-    public void getPlayerBoard(){
+    public void printBoardPrintsTheShipsIfUserIsHuman() throws IOException {
+        final Game testGame = new Game();
+        testGame.config("Player1");
 
+        ByteArrayOutputStream bo = new ByteArrayOutputStream();
+        System.setOut(new PrintStream(bo));
+
+        testGame.printBoard();
+
+        bo.flush();
+        String inputLines = new String(bo.toByteArray());
+
+        assertTrue(inputLines.contains("|  P  |"));
+        assertTrue(inputLines.contains("|  A  |"));
+        assertTrue(inputLines.contains("|  C  |"));
+        assertTrue(inputLines.contains("|  D  |"));
+        assertTrue(inputLines.contains("|  S  |"));
     }
 
     @Test
-    public void getOpponentBoard(){
+    public void printBoardDoesNotPrintShipsIfUserIsComputer() throws IOException {
+        final Game testGame = new Game();
+        testGame.config("Player1");
+        testGame.setCurrentPlayer();
 
+        ByteArrayOutputStream bo = new ByteArrayOutputStream();
+        System.setOut(new PrintStream(bo));
+
+        testGame.printBoard();
+
+        bo.flush();
+        String inputLines = new String(bo.toByteArray());
+
+        assertFalse(inputLines.contains("|  P  |"));
+        assertFalse(inputLines.contains("|  A  |"));
+        assertFalse(inputLines.contains("|  C  |"));
+        assertFalse(inputLines.contains("|  D  |"));
+        assertFalse(inputLines.contains("|  S  |"));
     }
 }

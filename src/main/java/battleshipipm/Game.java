@@ -77,6 +77,11 @@ public class Game {
     }
 
     public void printBoard(){
+        if(this.getCurrentPlayer() == this.getHuman()){
+            this.setMode("dev");
+        } else {
+            this.setMode("off");
+        }
         this.getBoardCli().printBoard(this.getCurrentBoard(), this.getMode());
     }
 
@@ -113,12 +118,4 @@ public class Game {
     public boolean isOver(){
         return this.getCurrentBoard().allShipsAreSunk();
     }
-
-    /*public Board getPlayerBoard(){
-        return this.getHuman().getBoard();
-    }
-
-    public Board getOpponentBoard(){
-        return this.getOpponent().getBoard();
-    }*/
 }
