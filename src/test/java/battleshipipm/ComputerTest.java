@@ -11,36 +11,44 @@ import static org.junit.Assert.*;
 public class ComputerTest {
     @Test
     public void getName() throws NoSuchFieldException, IllegalAccessException {
-        final Human testHuman = new Human("Player1");
-        final Field field = testHuman.getClass().getDeclaredField("name");
+        final Computer testComputer = new Computer("Computer");
+        final Field field = testComputer.getClass().getDeclaredField("name");
         field.setAccessible(true);
 
-        assertEquals("Player1", field.get(testHuman));
+        assertEquals("Computer", field.get(testComputer));
     }
 
     @Test
     public void getBoard() {
-        final Human testHuman = new Human("Player1");
+        final Computer testComputer = new Computer("Computer");
 
-        assertThat(testHuman.getBoard(), instanceOf(Board.class));
+        assertThat(testComputer.getBoard(), instanceOf(Board.class));
     }
 
     @Test
     public void setType() throws NoSuchFieldException, IllegalAccessException {
-        final Human testHuman = new Human("Player1");
-        final String testType = "Human";
-        final Field field = testHuman.getClass().getDeclaredField("type");
+        final Computer testComputer = new Computer("Computer");
+        final String testType = "Computer";
+        final Field field = testComputer.getClass().getDeclaredField("type");
         field.setAccessible(true);
-        field.set(testHuman, testType);
+        field.set(testComputer, testType);
 
-        assertEquals("Human", field.get(testHuman));
+        assertEquals("Computer", field.get(testComputer));
     }
 
     @Test
     public void getType() {
-        final Human testHuman = new Human("Player1");
-        testHuman.setType("Human");
+        final Computer testComputer = new Computer("Computer");
+        testComputer.setType("Computer");
 
-        assertEquals("Human", testHuman.getType());
+        assertEquals("Computer", testComputer.getType());
+    }
+
+    @Test
+    public void getMove(){
+        final Computer testComputer = new Computer("Computer");
+        int result = testComputer.getMove();
+
+        assertTrue(0 <= result && result <= 100);
     }
 }

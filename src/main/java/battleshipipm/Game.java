@@ -118,4 +118,8 @@ public class Game {
     public boolean isOver(){
         return this.getCurrentBoard().allShipsAreSunk();
     }
+
+    public int getComputerMove(){
+        return this.getComputer().getMove();
+    }
 }

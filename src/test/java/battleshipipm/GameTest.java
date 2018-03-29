@@ -4,6 +4,7 @@ import org.hamcrest.core.IsNull;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
+import org.mockito.Answers;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
@@ -27,7 +28,7 @@ import static org.mockito.MockitoAnnotations.initMocks;
 
 public class GameTest {
 
-    @Mock
+    @Mock(answer = Answers.RETURNS_DEEP_STUBS)
     private Board mockedBoard;
 
     @Mock
@@ -38,6 +39,9 @@ public class GameTest {
 
     @Mock
     private Computer mockedComputer;
+
+    @Mock
+    private Player mockedPlayer;
 
     @InjectMocks
     private Game mockedGame;
@@ -217,10 +221,11 @@ public class GameTest {
 
     @Test
     public void printBoardNoArgs() {
+        when(mockedGame.getCurrentBoard()).thenReturn(mockedBoard);
         doNothing().when(mockedBoardCli).printBoard(mockedBoard, mockedGame.getMode());
         mockedGame.printBoard();
 
-        verify(mockedBoardCli, times(1)).printBoard((Board)isNull(), anyString());
+        verify(mockedBoardCli, times(1)).printBoard(mockedBoard, mockedGame.getMode());
     }
 
     @Test
@@ -375,5 +380,17 @@ public class GameTest {
         assertFalse(inputLines.contains("|  C  |"));
         assertFalse(inputLines.contains("|  D  |"));
         assertFalse(inputLines.contains("|  S  |"));
+    }
+
+    @Test
+    public void getComputerMove(){
+        Game testGame = new Game();
+        Game spyGame = Mockito.spy(testGame);
+
+        when(spyGame.getComputer()).thenReturn(mockedComputer);
+
+        spyGame.getComputerMove();
+
+        verify(spyGame, times(1)).getComputer();
     }
 }

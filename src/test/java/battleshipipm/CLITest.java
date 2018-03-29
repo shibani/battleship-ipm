@@ -532,4 +532,17 @@ public class CLITest {
 
         assertEquals(testGame, testCli.getGame());
     }
+
+    @Test
+    public void getComputerMove() throws IOException {
+        ByteArrayOutputStream bo = new ByteArrayOutputStream();
+        System.setOut(new PrintStream(bo));
+
+        CLI testCLI = new CLI();
+        testCLI.getComputerMove("Computer");
+
+        bo.flush();
+        String inputLines = new String(bo.toByteArray());
+        assertTrue(inputLines.contains("Computer is generating a move..."));
+    }
 }

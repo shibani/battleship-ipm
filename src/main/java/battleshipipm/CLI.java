@@ -23,6 +23,8 @@ public class CLI {
 
     private String gameOver = "You won";
 
+    private String computerMove = "Computer is generating a move...";
+
     public void welcome(){
         this.printString(this.welcomeString);
     }
@@ -140,6 +142,10 @@ public class CLI {
         } while (invalid);
 
         return result;
+    }
+
+    public void getComputerMove(String playerName) {
+        this.printString(this.computerMove);
     }
 
     public void tryAgain(){

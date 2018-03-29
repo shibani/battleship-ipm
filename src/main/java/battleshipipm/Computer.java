@@ -39,7 +39,7 @@ public class Computer extends Player{
         return this.type;
     }
 
-    public int move(){
+    public int getMove(){
         return (int) Math.floor(Math.random() * 101);
     }
 

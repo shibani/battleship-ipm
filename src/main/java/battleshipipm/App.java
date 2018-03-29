@@ -31,8 +31,7 @@ public class App {
 
     public void gameLoop(Player player) {
         this.game.printBoard();
-        String moveString = this.cli.getPlayerMove(player.getName());
-        int move = this.game.convertPlayerMoveToInt(moveString);
+        int move = this.getMove(player);
         if(this.game.validMove(move)){
             this.game.makeMove(move);
             this.game.printBoard();
@@ -61,5 +60,15 @@ public class App {
 
     public Player getCurrentPlayer(){
         return this.game.getCurrentPlayer();
+    }
+
+    public int getMove(Player player){
+        if(player == this.getHuman()){
+            String moveString = this.cli.getPlayerMove(player.getName());
+            return this.game.convertPlayerMoveToInt(moveString);
+        } else {
+            this.cli.getComputerMove(player.getName());
+            return this.game.getComputerMove();
+        }
     }
 }
