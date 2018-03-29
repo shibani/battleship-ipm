@@ -13,21 +13,22 @@ public class App {
     }
 
     public void playGame() {
-        Player player = this.setup();
+        this.setup();
 
         while(!this.gameOver()){
-            this.gameLoop(player);
+            this.gameLoop(this.getCurrentPlayer());
+            this.game.setCurrentPlayer();
         }
         if(this.gameOver()){
-            this.endGame(player);
+            this.endGame(this.getPlayer());
         }
     }
 
-    public Player setup() {
+    public void setup() {
         this.cli.welcome();
         this.cli.setGame(game);
         String playerName = this.cli.getPlayerName();
-        return this.game.config(playerName);
+        this.game.config(playerName);
     }
 
     public void gameLoop(Player player) {
@@ -49,5 +50,13 @@ public class App {
 
     public void endGame(Player player){
         this.cli.endGame(player);
+    }
+
+    public Player getPlayer(){
+        return this.game.getPlayer();
+    }
+
+    public Player getCurrentPlayer(){
+        return this.game.getCurrentPlayer();
     }
 }

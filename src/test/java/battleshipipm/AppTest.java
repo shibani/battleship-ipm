@@ -1,5 +1,6 @@
 package battleshipipm;
 
+import org.hamcrest.core.IsNull;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -37,39 +38,56 @@ public class AppTest {
         initMocks(this);
     }
 
-
     @Test
-    public void playGame() {
+    public void playGameCallsSetup() {
         App testApp = new App(mockedCli, mockedGame);
         App spyApp = Mockito.spy(testApp);
 
-        when(spyApp.setup()).thenReturn(mockedPlayer);
+        doNothing().when(spyApp).setup();
         when(spyApp.gameOver()).thenReturn(false).thenReturn(true);
+        when(spyApp.getCurrentPlayer()).thenReturn(mockedPlayer);
         doNothing().when(spyApp).gameLoop(mockedPlayer);
-        spyApp.playGame();
 
-        verify(spyApp, times(2)).setup();
+        spyApp.playGame();
+        verify(spyApp, times(1)).setup();
     }
 
     @Test
-    public void playGame1() {
+    public void playGameCallsTheGameLoop() {
         App testApp = new App(mockedCli, mockedGame);
         App spyApp = Mockito.spy(testApp);
 
-        when(spyApp.setup()).thenReturn(mockedPlayer);
+        doNothing().when(spyApp).setup();
         when(spyApp.gameOver()).thenReturn(false).thenReturn(true);
+        when(spyApp.getCurrentPlayer()).thenReturn(mockedPlayer);
         doNothing().when(spyApp).gameLoop(mockedPlayer);
+
         spyApp.playGame();
 
         verify(spyApp, times(1)).gameLoop(mockedPlayer);
     }
 
     @Test
-    public void playGame2() {
+    public void playGameCanSwitchTheCurrentPlayer() {
         App testApp = new App(mockedCli, mockedGame);
         App spyApp = Mockito.spy(testApp);
 
-        when(spyApp.setup()).thenReturn(mockedPlayer);
+        doNothing().when(spyApp).setup();
+        doReturn(false).doReturn(true).when(spyApp).gameOver();
+        when(spyApp.getCurrentPlayer()).thenReturn(mockedPlayer);
+        doNothing().when(spyApp).gameLoop(mockedPlayer);
+
+        spyApp.playGame();
+
+        verify(spyApp, atLeast(1)).getCurrentPlayer();
+    }
+
+    @Test
+    public void playGameChecksIfTheGameIsOver() {
+        App testApp = new App(mockedCli, mockedGame);
+        App spyApp = Mockito.spy(testApp);
+
+        doNothing().when(spyApp).setup();
         when(spyApp.gameOver()).thenReturn(true);
         doNothing().when(spyApp).gameLoop(mockedPlayer);
         spyApp.playGame();
@@ -78,16 +96,16 @@ public class AppTest {
     }
 
     @Test
-    public void playGame3() {
+    public void playGameCanCallEndGameWhenTheGameIsOver() {
         App testApp = new App(mockedCli, mockedGame);
         App spyApp = Mockito.spy(testApp);
 
-        when(spyApp.setup()).thenReturn(mockedPlayer);
-        when(spyApp.gameOver()).thenReturn(true);
+        doNothing().when(spyApp).setup();
+        doReturn(true).when(spyApp).gameOver();
         doNothing().when(spyApp).gameLoop(mockedPlayer);
         spyApp.playGame();
 
-        verify(spyApp, times(1)).endGame(mockedPlayer);
+        verify(spyApp, times(1)).endGame((Player)isNull());
     }
 
     @Test
@@ -97,6 +115,7 @@ public class AppTest {
         verify(mockedCli, times(1)).welcome();
     }
 
+    @Test
     public void setup1() {
         mockedApp.setup();
 
@@ -223,5 +242,32 @@ public class AppTest {
 
         mockedApp.playGame();
         verify(mockedCli, times(1)).endGame((Player)isNull());
+    }
+
+    @Test
+    public void getPlayer() {
+        when(mockedApp.getPlayer()).thenReturn(mockedPlayer);
+        when(mockedApp.gameOver()).thenReturn(true);
+
+        mockedApp.playGame();
+        verify(mockedGame, times(1)).getPlayer();
+    }
+
+    @Test
+    public void getCurrentPlayerCanSwitchThePlayer() {
+        when(mockedApp.getCurrentPlayer()).thenReturn(mockedPlayer);
+        when(mockedApp.gameOver()).thenReturn(false);
+
+        mockedApp.getCurrentPlayer();
+        verify(mockedGame, times(1)).getCurrentPlayer();
+    }
+
+    @Test
+    public void getCurrentPlayerReturnsThePlayer() {
+        when(mockedApp.getCurrentPlayer()).thenReturn(mockedPlayer);
+        when(mockedApp.gameOver()).thenReturn(false);
+
+        mockedApp.getCurrentPlayer();
+        verify(mockedGame, times(1)).getCurrentPlayer();
     }
 }

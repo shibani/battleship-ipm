@@ -92,7 +92,7 @@ public class CLI {
             System.exit(0);
         } else if (str.equals("dev")) {
             this.printString("Now entering developer mode\n");
-            this.getGame().printBoard(getGame().getBoard(), str);
+            this.getGame().printBoard(getGame().getCurrentBoard(), str);
             this.getGame().setMode(str);
             output = "";
         } else if (str.equals("off")) {

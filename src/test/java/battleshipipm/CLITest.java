@@ -307,6 +307,17 @@ public class CLITest {
     }
 
     @Test
+    public void parsePlayerMoveInputCanTurnOnDeveloperMode() {
+        String str = "dev";
+        CLI testCli = new CLI();
+        Game testGame = new Game();
+        testCli.setGame(testGame);
+        testGame.config("Player1");
+
+        assertEquals("Player1", testGame.getCurrentPlayer().getName());
+    }
+
+    @Test
     public void parsePlayerMoveInputCanTurnOnDeveloperMode1() throws IOException {
         ByteArrayOutputStream bo = new ByteArrayOutputStream();
         System.setOut(new PrintStream(bo));
@@ -315,9 +326,8 @@ public class CLITest {
         CLI testCli = new CLI();
         Game testGame = new Game();
         testCli.setGame(testGame);
-        testGame.setBoard(16);
-        Board testBoard = testGame.getBoard();
-        testGame.setBoardCli(testBoard);
+        testGame.config("Player1");
+
 
         testCli.parsePlayerMoveInput(str, "Player1");
 
@@ -328,7 +338,7 @@ public class CLITest {
     }
 
     @Test
-    public void parsePlayerMoveInputCanTurnOffDeveloperMode1() throws IOException {
+    public void parsePlayerMoveInputCanTurnOffDeveloperMode() throws IOException {
         ByteArrayOutputStream bo = new ByteArrayOutputStream();
         System.setOut(new PrintStream(bo));
 
@@ -345,7 +355,6 @@ public class CLITest {
         assertTrue(inputLines.contains("Switching off developer mode"));
     }
 
-
     @Test
     public void parsePlayerMoveInputCanTurnOffDeveloperMode2() {
         CLI testCli = new CLI();
@@ -358,8 +367,6 @@ public class CLITest {
         //mockedCli.parsePlayerMoveInput(str, "Player1");
         assertEquals("normal", testCli.getGame().getMode());
     }
-
-
 
     @Test
     public void parsePlayerMoveInputChecksIfArgIsEmptyString() throws IOException {

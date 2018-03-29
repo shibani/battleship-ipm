@@ -5,8 +5,11 @@ import org.junit.Test;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.PrintStream;
+import java.lang.reflect.Field;
 
 import static junit.framework.TestCase.assertTrue;
+import static org.hamcrest.CoreMatchers.instanceOf;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.*;
 
 public class BoardCLITest {
@@ -14,7 +17,8 @@ public class BoardCLITest {
     @Test
     public void printBoard() throws IOException {
         Board board = new Board();
-        BoardCLI bcli = new BoardCLI(board);
+        BoardCLI bcli = new BoardCLI();
+
         ByteArrayOutputStream bo = new ByteArrayOutputStream();
         System.setOut(new PrintStream(bo));
 
@@ -28,18 +32,13 @@ public class BoardCLITest {
 
     @Test
     public void displayShips() throws IOException {
-        Board board = new Board();
-        BoardCLI bcli = new BoardCLI(board);
-
-        board.setTotalPositions(100);
-        board.setPositions();
-        board.setShips();
+        Game testGame = new Game();
+        testGame.config("Player1");
 
         ByteArrayOutputStream bo = new ByteArrayOutputStream();
         System.setOut(new PrintStream(bo));
 
-        //bcli.displayShips(board);
-        bcli.printBoard(board, "dev");
+        testGame.printBoard(testGame.getCurrentBoard(), "dev");
 
         bo.flush();
         String inputLines = new String(bo.toByteArray());
@@ -54,7 +53,9 @@ public class BoardCLITest {
     @Test
     public void printStatus() throws IOException {
         Board board = new Board();
-        BoardCLI bcli = new BoardCLI(board);
+        BoardCLI bcli = new BoardCLI();
+        //bcli.setBoard(board);
+
         ByteArrayOutputStream bo = new ByteArrayOutputStream();
         System.setOut(new PrintStream(bo));
 
@@ -69,7 +70,9 @@ public class BoardCLITest {
     @Test
     public void printSunkStatus() throws IOException {
         Board board = new Board();
-        BoardCLI bcli = new BoardCLI(board);
+        BoardCLI bcli = new BoardCLI();
+        //bcli.setBoard(board);
+
         ByteArrayOutputStream bo = new ByteArrayOutputStream();
         System.setOut(new PrintStream(bo));
 
@@ -84,7 +87,9 @@ public class BoardCLITest {
     @Test
     public void printSunkStatusReturnsShipType() throws IOException {
         Board board = new Board();
-        BoardCLI bcli = new BoardCLI(board);
+        BoardCLI bcli = new BoardCLI();
+        //bcli.setBoard(board);
+
         ByteArrayOutputStream bo = new ByteArrayOutputStream();
         System.setOut(new PrintStream(bo));
 
