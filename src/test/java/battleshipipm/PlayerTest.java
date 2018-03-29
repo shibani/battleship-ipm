@@ -21,7 +21,7 @@ import static org.mockito.MockitoAnnotations.initMocks;
 public class PlayerTest {
 
     @Test
-    public void getName() {
+    public void getName() throws NoSuchFieldException, IllegalAccessException {
         final Player testPlayer = new Player("Player1");
         final Field field = testPlayer.getClass().getDeclaredField("name");
         field.setAccessible(true);
