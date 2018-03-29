@@ -3,8 +3,8 @@ package battleshipipm;
 public class Game {
 
     private BoardCLI boardCli;
-    private Player player;
-    private Player opponent;
+    private Human human;
+    private Computer computer;
     private Player currentPlayer;
     private String mode;
 
@@ -15,12 +15,11 @@ public class Game {
 
     public void config(String playerName){
 
-        this.setPlayer(playerName);
-        this.setOpponent();
+        this.setHuman(playerName);
+        this.setComputer();
         this.setCurrentPlayer();
 
         this.setBoardCli();
-        this.printBoard(this.getCurrentBoard(), this.getMode());
     }
 
     public void setBoardCli(){
@@ -31,20 +30,20 @@ public class Game {
         return boardCli;
     }
 
-    public void setPlayer(String name){
-        this.player = new Player(name);
+    public void setHuman(String name){
+        this.human = new Human(name);
     }
 
-    public Player getPlayer(){
-        return this.player;
+    public Human getHuman(){
+        return this.human;
     }
 
-    public void setOpponent(){
-        this.opponent = new Player("Computer");
+    public void setComputer(){
+        this.computer = new Computer("Computer");
     }
 
-    public Player getOpponent(){
-        return this.opponent;
+    public Computer getComputer(){
+        return this.computer;
     }
 
     public void setMode(String str){
@@ -60,17 +59,17 @@ public class Game {
     }
 
     public void setCurrentPlayer(){
-        if(this.currentPlayer == this.getPlayer()){
-            this.currentPlayer = this.getOpponent();
-        }else if(this.currentPlayer == this.getOpponent()){
-            this.currentPlayer = this.getPlayer();
+        if(this.currentPlayer == this.getHuman()){
+            this.currentPlayer = this.getComputer();
+        }else if(this.currentPlayer == this.getComputer()){
+            this.currentPlayer = this.getHuman();
         }else if(this.currentPlayer == null){
-            this.currentPlayer = this.getPlayer();
+            this.currentPlayer = this.getHuman();
         }
     }
 
     public Player getCurrentPlayer(){
-        return currentPlayer;
+        return this.currentPlayer;
     }
 
     public Board getCurrentBoard(){
@@ -116,7 +115,7 @@ public class Game {
     }
 
     /*public Board getPlayerBoard(){
-        return this.getPlayer().getBoard();
+        return this.getHuman().getBoard();
     }
 
     public Board getOpponentBoard(){

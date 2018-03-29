@@ -1,19 +1,12 @@
 package battleshipipm;
 
-import org.hamcrest.core.IsNull;
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
-import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.internal.matchers.InstanceOf;
-import org.mockito.invocation.InvocationOnMock;
-import org.mockito.stubbing.Answer;
 
-import java.io.IOException;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -61,7 +54,7 @@ public class GameTest {
 
         spyGame.config("Player1");
 
-        verify(spyGame, times(1)).setPlayer("Player1");
+        verify(spyGame, times(1)).setHuman("Player1");
     }
 
     @Test
@@ -71,27 +64,7 @@ public class GameTest {
 
         spyGame.config("Player1");
 
-        verify(spyGame, times(1)).setOpponent();
-    }
-
-    @Test
-    public void configCanGetTheCurrentBoard() {
-        Game testGame = new Game();
-        Game spyGame = Mockito.spy(testGame);
-
-        spyGame.config("Player1");
-
-        verify(spyGame, times(1)).getCurrentBoard();
-    }
-
-    @Test
-    public void configCanPrintABoard() {
-        Game testGame = new Game();
-        Game spyGame = Mockito.spy(testGame);
-
-        spyGame.config("Player1");
-
-        verify(spyGame, times(1)).printBoard(any(Board.class), anyString());
+        verify(spyGame, times(1)).setComputer();
     }
 
     @Test
@@ -127,42 +100,42 @@ public class GameTest {
     }
 
     @Test
-    public void setPlayer() throws NoSuchFieldException, IllegalAccessException {
+    public void setHuman() throws NoSuchFieldException, IllegalAccessException {
         Game testGame = new Game();
         testGame.config("Player1");
-        final Field field = testGame.getClass().getDeclaredField("player");
+        final Field field = testGame.getClass().getDeclaredField("human");
         field.setAccessible(true);
 
-        assertThat(field.get(testGame), instanceOf(Player.class));
+        assertThat(field.get(testGame), instanceOf(Human.class));
     }
 
     @Test
-    public void getPlayer() throws NoSuchFieldException, IllegalAccessException {
+    public void getHuman() throws NoSuchFieldException, IllegalAccessException {
         final Game testGame = new Game();
-        final Player testPlayer = new Player("Player2");
-        final Field field = testGame.getClass().getDeclaredField("player");
+        final Human testHuman = new Human("Player2");
+        final Field field = testGame.getClass().getDeclaredField("human");
         field.setAccessible(true);
-        field.set(testGame, testPlayer);
+        field.set(testGame, testHuman);
 
-        final Player result = testGame.getPlayer();
+        final Human result = testGame.getHuman();
 
-        assertEquals(testPlayer, result);
+        assertEquals(testHuman, result);
     }
 
     @Test
-    public void setOpponent() {
+    public void setComputer() {
         final Game testGame = new Game();
-        testGame.setOpponent();
+        testGame.setComputer();
 
-        assertThat(testGame.getOpponent(), instanceOf(Player.class));
+        assertThat(testGame.getComputer(), instanceOf(Computer.class));
     }
 
     @Test
-    public void getOpponent() {
+    public void getComputer() {
         final Game testGame = new Game();
-        testGame.setOpponent();
+        testGame.setComputer();
 
-        assertEquals("Computer", testGame.getOpponent().getName());
+        assertEquals("Computer", testGame.getComputer().getName());
     }
 
     @Test
@@ -216,15 +189,15 @@ public class GameTest {
     @Test
     public void getCurrentPlayer() throws NoSuchFieldException, IllegalAccessException {
         final Game testGame = new Game();
-        final Player testPlayer = new Player("Computer");
+        final Human testHuman = new Human("Computer");
 
         final Field field = testGame.getClass().getDeclaredField("currentPlayer");
         field.setAccessible(true);
-        field.set(testGame, testPlayer);
+        field.set(testGame, testHuman);
 
         final Player resultPlayer = testGame.getCurrentPlayer();
 
-        assertEquals("Computer", testGame.getCurrentPlayer().getName());
+        assertEquals("Computer", resultPlayer.getName());
     }
 
     @Test

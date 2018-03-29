@@ -1,19 +1,13 @@
 package battleshipipm;
 
-import org.hamcrest.core.IsNull;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
-import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 
 
-import java.io.IOException;
-
 import static org.junit.Assert.assertEquals;
-import static org.mockito.AdditionalAnswers.returnsFirstArg;
 import static org.mockito.Mockito.*;
 import static org.mockito.MockitoAnnotations.initMocks;
 
@@ -28,6 +22,9 @@ public class AppTest {
 
     @Mock
     private Player mockedPlayer;
+
+    @Mock
+    private Human mockedHuman;
 
     @InjectMocks
     private App mockedApp;
@@ -105,7 +102,7 @@ public class AppTest {
         doNothing().when(spyApp).gameLoop(mockedPlayer);
         spyApp.playGame();
 
-        verify(spyApp, times(1)).endGame((Player)isNull());
+        verify(spyApp, times(1)).endGame((Human)isNull());
     }
 
     @Test
@@ -152,7 +149,7 @@ public class AppTest {
     }
 
     @Test
-    public void gameLoop1() {
+    public void gameLoop1ConvertsThePlayerMove() {
         when(mockedCli.getPlayerMove(anyString())).thenReturn("d3");
         when(mockedGame.convertPlayerMoveToInt(anyString())).thenReturn(30);
         when(mockedGame.validMove(anyInt())).thenReturn(true);
@@ -165,7 +162,7 @@ public class AppTest {
     }
 
     @Test
-    public void gameLoop2() {
+    public void gameLoop2ChecksForValidMove() {
         when(mockedCli.getPlayerMove(anyString())).thenReturn("d3");
         when(mockedGame.convertPlayerMoveToInt(anyString())).thenReturn(30);
         when(mockedGame.validMove(anyInt())).thenReturn(true);
@@ -178,7 +175,7 @@ public class AppTest {
     }
 
     @Test
-    public void gameLoop3() {
+    public void gameLoop3MakesTheMove() {
         when(mockedCli.getPlayerMove(anyString())).thenReturn("d3");
         when(mockedGame.convertPlayerMoveToInt(anyString())).thenReturn(30);
         when(mockedGame.validMove(anyInt())).thenReturn(true);
@@ -191,7 +188,7 @@ public class AppTest {
     }
 
     @Test
-    public void gameLoop4() {
+    public void gameLoop4PrintsTheBoard() {
         when(mockedCli.getPlayerMove(anyString())).thenReturn("d3");
         when(mockedGame.convertPlayerMoveToInt(anyString())).thenReturn(30);
         when(mockedGame.validMove(anyInt())).thenReturn(true);
@@ -200,24 +197,24 @@ public class AppTest {
         doNothing().when(mockedGame).printStatus(anyString(),anyInt());
 
         mockedApp.gameLoop(mockedPlayer);
-        verify(mockedGame, times(1)).printBoard();
+        verify(mockedGame, atLeast(2)).printBoard();
     }
 
     @Test
-    public void gameLoop5() {
-        Player testPlayer = new Player("Player1");
+    public void gameLoop5CanCheckIfMoveResultedInHitOrSunkShip() {
+        Human testHuman = new Human("Player1");
         when(mockedCli.getPlayerMove(anyString())).thenReturn("d3");
         when(mockedGame.convertPlayerMoveToInt(anyString())).thenReturn(30);
         when(mockedGame.validMove(anyInt())).thenReturn(true);
         doNothing().when(mockedGame).makeMove(anyInt());
         doNothing().when(mockedGame).printBoard();
         doNothing().when(mockedGame).printStatus(anyString(),anyInt());
-        mockedApp.gameLoop(testPlayer);
-        verify(mockedGame, times(1)).printStatus(testPlayer.getName(), 30);
+        mockedApp.gameLoop(testHuman);
+        verify(mockedGame, times(1)).printStatus(testHuman.getName(), 30);
     }
 
     @Test
-    public void gameLoop6() {
+    public void gameLoop6CanAskthePlayerToTryAgain() {
         when(mockedCli.getPlayerMove(anyString())).thenReturn("d3");
         when(mockedGame.convertPlayerMoveToInt(anyString())).thenReturn(30);
         when(mockedGame.validMove(anyInt())).thenReturn(false).thenReturn(false).thenReturn(true);
@@ -241,16 +238,16 @@ public class AppTest {
         when(mockedApp.gameOver()).thenReturn(true);
 
         mockedApp.playGame();
-        verify(mockedCli, times(1)).endGame((Player)isNull());
+        verify(mockedCli, times(1)).endGame((Human)isNull());
     }
 
     @Test
     public void getPlayer() {
-        when(mockedApp.getPlayer()).thenReturn(mockedPlayer);
+        when(mockedApp.getHuman()).thenReturn(mockedHuman);
         when(mockedApp.gameOver()).thenReturn(true);
 
         mockedApp.playGame();
-        verify(mockedGame, times(1)).getPlayer();
+        verify(mockedGame, times(1)).getHuman();
     }
 
     @Test

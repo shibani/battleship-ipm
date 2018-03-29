@@ -1,7 +1,5 @@
 package battleshipipm;
 
-import java.io.IOException;
-
 public class App {
 
     private CLI cli;
@@ -20,7 +18,7 @@ public class App {
             this.game.setCurrentPlayer();
         }
         if(this.gameOver()){
-            this.endGame(this.getPlayer());
+            this.endGame(this.getHuman());
         }
     }
 
@@ -32,6 +30,7 @@ public class App {
     }
 
     public void gameLoop(Player player) {
+        this.game.printBoard();
         String moveString = this.cli.getPlayerMove(player.getName());
         int move = this.game.convertPlayerMoveToInt(moveString);
         if(this.game.validMove(move)){
@@ -48,12 +47,16 @@ public class App {
         return this.game.isOver();
     }
 
-    public void endGame(Player player){
-        this.cli.endGame(player);
+    public void endGame(Human human){
+        this.cli.endGame(human);
     }
 
-    public Player getPlayer(){
-        return this.game.getPlayer();
+    public Human getHuman(){
+        return this.game.getHuman();
+    }
+
+    public Computer getComputer(){
+        return this.game.getComputer();
     }
 
     public Player getCurrentPlayer(){
