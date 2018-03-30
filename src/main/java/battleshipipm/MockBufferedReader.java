@@ -20,5 +20,3 @@ public class MockBufferedReader extends BufferedReader {
             return br.readLine();
         }
     }
-
-}
