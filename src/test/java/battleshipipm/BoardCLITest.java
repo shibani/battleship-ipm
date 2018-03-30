@@ -12,13 +12,13 @@ import static org.junit.Assert.*;
 public class BoardCLITest {
 
     @Test
-    public void print() throws IOException {
+    public void printBoard() throws IOException {
         Board board = new Board();
         BoardCLI bcli = new BoardCLI(board);
         ByteArrayOutputStream bo = new ByteArrayOutputStream();
         System.setOut(new PrintStream(bo));
 
-        bcli.print(board);
+        bcli.printBoard(board, null);
 
         bo.flush();
         String inputLines = new String(bo.toByteArray());
@@ -38,7 +38,8 @@ public class BoardCLITest {
         ByteArrayOutputStream bo = new ByteArrayOutputStream();
         System.setOut(new PrintStream(bo));
 
-        bcli.displayShips(board);
+        //bcli.displayShips(board);
+        bcli.printBoard(board, "dev");
 
         bo.flush();
         String inputLines = new String(bo.toByteArray());

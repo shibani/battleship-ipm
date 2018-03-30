@@ -17,6 +17,8 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+import static junit.framework.TestCase.assertNotNull;
+import static junit.framework.TestCase.assertNull;
 import static junit.framework.TestCase.assertTrue;
 import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -157,11 +159,19 @@ public class GameTest {
     }
 
     @Test
-    public void printBoard() {
-        doNothing().when(mockedBoardCli).print(mockedBoard);
+    public void printBoardNoArgs() {
+        doNothing().when(mockedBoardCli).printBoard(mockedBoard, mockedGame.getMode());
         mockedGame.printBoard();
 
-        verify(mockedBoardCli, times(1)).print(mockedBoard);
+        verify(mockedBoardCli, times(1)).printBoard(mockedBoard, mockedGame.getMode());
+    }
+
+    @Test
+    public void printBoardOverloaded() {
+        doNothing().when(mockedBoardCli).printBoard(mockedBoard, mockedGame.getMode());
+        mockedGame.printBoard(mockedBoard, mockedGame.getMode());
+
+        verify(mockedBoardCli, times(1)).printBoard(mockedBoard, mockedGame.getMode());
     }
 
     @Test
@@ -218,5 +228,36 @@ public class GameTest {
         boolean result = mockedGame.isOver();
 
         assertTrue(result);
+    }
+
+    @Test
+    public void setMode() throws IllegalAccessException, NoSuchFieldException {
+        final Game testGame = new Game();
+        final Field field = testGame.getClass().getDeclaredField("mode");
+        field.setAccessible(true);
+        field.set(testGame, "dev");
+
+        assertNotNull(testGame.getMode());
+    }
+
+    @Test
+    public void getMode() throws NoSuchFieldException, IllegalAccessException {
+        final Game testGame = new Game();
+
+        final Field field = testGame.getClass().getDeclaredField("mode");
+        field.setAccessible(true);
+        field.set(testGame, "dev");
+        String result = testGame.getMode();
+
+        assertEquals("dev", result);
+    }
+
+    @Test
+    public void getModeAlwaysReturnsAString() {
+        final Game testGame = new Game();
+
+        String result = testGame.getMode();
+
+        assertThat(testGame.getMode(), instanceOf(String.class));
     }
 }
