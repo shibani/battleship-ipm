@@ -3,6 +3,7 @@ package battleshipipm;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
+import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
@@ -11,6 +12,7 @@ import org.mockito.Mockito;
 import java.io.IOException;
 
 import static org.junit.Assert.assertEquals;
+import static org.mockito.AdditionalAnswers.returnsFirstArg;
 import static org.mockito.Mockito.*;
 import static org.mockito.MockitoAnnotations.initMocks;
 
@@ -211,6 +213,7 @@ public class AppTest {
     @Test
     public void endGame() {
         when(mockedApp.gameOver()).thenReturn(true);
+
         mockedApp.playGame();
         verify(mockedCli, times(1)).endGame((Player)isNull());
     }
