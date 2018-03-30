@@ -133,7 +133,7 @@ public class AppTest {
         doNothing().when(mockedGame).printStatus(anyString(),anyInt());
 
         mockedApp.gameLoop(mockedPlayer);
-        verify(mockedGame, times(1)).convertPlayerMoveToInt(isNull());
+        verify(mockedGame, times(1)).convertPlayerMoveToInt((String)isNull());
     }
 
     @Test
@@ -212,6 +212,6 @@ public class AppTest {
     public void endGame() {
         when(mockedApp.gameOver()).thenReturn(true);
         mockedApp.playGame();
-        verify(mockedCli, times(1)).endGame(isNull());
+        verify(mockedCli, times(1)).endGame((Player)isNull());
     }
 }
