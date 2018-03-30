@@ -99,15 +99,15 @@ public class AppTest {
     public void setup1() {
         mockedApp.setup();
 
-        verify(mockedCli, times(1)).askForPlayerName();
+        verify(mockedCli, times(1)).getPlayerName();
     }
 
     @Test
     public void setup2() {
-        //when(mockedCli.setup()).thenReturn(("Player1"));
+        when(mockedCli.getPlayerName()).thenReturn(("Player1"));
         mockedApp.setup();
 
-        verify(mockedCli, times(1)).getPlayerNameInput();
+        verify(mockedGame, times(1)).config("Player1");
     }
 
     @Test
@@ -133,7 +133,7 @@ public class AppTest {
         doNothing().when(mockedGame).printStatus(anyString(),anyInt());
 
         mockedApp.gameLoop(mockedPlayer);
-        verify(mockedGame, times(1)).convertPlayerMoveToInt(isNull());
+        verify(mockedGame, times(1)).convertPlayerMoveToInt((String)isNull());
     }
 
     @Test
@@ -212,6 +212,6 @@ public class AppTest {
     public void endGame() {
         when(mockedApp.gameOver()).thenReturn(true);
         mockedApp.playGame();
-        verify(mockedCli, times(1)).endGame(isNull());
+        verify(mockedCli, times(1)).endGame((Player)isNull());
     }
 }

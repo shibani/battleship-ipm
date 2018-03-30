@@ -267,7 +267,7 @@ public class BoardTest {
     }
 
     @Test
-    public void shipIsSunk() throws NoSuchFieldException, IllegalAccessException {
+    public void shipIsSunkReturnsNoneIfHitDoesntSinkShip() throws NoSuchFieldException, IllegalAccessException {
         final Board testBoard = new Board();
         testBoard.setTotalPositions(16);
         testBoard.setPositions();
@@ -305,10 +305,16 @@ public class BoardTest {
     }
 
     @Test
-    public void shipIsSunk1() throws NoSuchFieldException, IllegalAccessException {
+    public void shipIsSunkReturnsShipTypeIfShipIsSunk() throws NoSuchFieldException, IllegalAccessException {
         final Board testBoard = new Board();
         testBoard.setTotalPositions(16);
         testBoard.setPositions();
+
+        Ship testShip = new Ship();
+        testShip.setType("Submarine");
+        testShip.setSize(3);
+        Integer[] positions = {9,10,11};
+        testShip.setPosition(positions);
 
         ArrayList<Integer> shipPositions = new ArrayList<>();
         shipPositions.add(9);
@@ -320,6 +326,9 @@ public class BoardTest {
         shipMarkers.add("S");
         shipMarkers.add("S");
 
+        ArrayList<Ship> boardShips = new ArrayList<>();
+        boardShips.add(testShip);
+
         Field field1 = testBoard.getClass().getDeclaredField("filledShipPositions");
         field1.setAccessible(true);
         field1.set(testBoard, shipPositions);
@@ -328,10 +337,9 @@ public class BoardTest {
         field2.setAccessible(true);
         field2.set(testBoard, shipMarkers);
 
-        Ship testShip = new Ship();
-        Field field3 = testShip.getClass().getDeclaredField("position");
+        Field field3 = testBoard.getClass().getDeclaredField("ships");
         field3.setAccessible(true);
-        field3.set(testShip, shipPositions);
+        field3.set(testBoard, boardShips);
 
         for(int i = 0; i < 11; i++){
             testBoard.addMarker(i);
@@ -343,7 +351,7 @@ public class BoardTest {
         testBoard.addMarker(11);
         String result3 = testBoard.shipIsSunk(11);
 
-        assertEquals("S", result3);
+        assertEquals("Submarine", result3);
     }
 
     @Test
