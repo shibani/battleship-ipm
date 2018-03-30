@@ -14,7 +14,7 @@ public class CLI {
                     "    Welcome to Battleship     \n" +
                     "==============================\n";
 
-    private String getPlayerNameString = "Enter your Player Name:\n" +
+    private String getPlayerNameString = "Enter your Human Name:\n" +
             "(Name should contain only numbers and alphabets. Name should not be empty)\n";
 
     private String getPlayerMoveString = ", enter your move with one letter for the row and one digit for the column, e.g 'd9':\n";
@@ -22,6 +22,8 @@ public class CLI {
     private String tryAgainString = "That position is already filled. Please try again.\n";
 
     private String gameOver = "You won";
+
+    private String computerMove = "Computer is generating a move...";
 
     public void welcome(){
         this.printString(this.welcomeString);
@@ -92,7 +94,7 @@ public class CLI {
             System.exit(0);
         } else if (str.equals("dev")) {
             this.printString("Now entering developer mode\n");
-            this.getGame().printBoard(getGame().getBoard(), str);
+            this.getGame().printBoard(getGame().getCurrentBoard(), str);
             this.getGame().setMode(str);
             output = "";
         } else if (str.equals("off")) {
@@ -142,12 +144,16 @@ public class CLI {
         return result;
     }
 
+    public void getComputerMove(String playerName) {
+        this.printString(this.computerMove);
+    }
+
     public void tryAgain(){
         this.printString(this.tryAgainString);
     }
 
-    public void endGame(Player player){
-        this.printString(gameOver + ", " + player.getName() + "!");
+    public void endGame(Human human){
+        this.printString(gameOver + ", " + human.getName() + "!");
     }
 
     public void setGame(Game game){

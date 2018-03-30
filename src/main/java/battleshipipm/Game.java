@@ -1,91 +1,49 @@
 package battleshipipm;
 
-import java.io.IOException;
-
 public class Game {
 
-    private Board board;
     private BoardCLI boardCli;
-    private Player player;
+    private Human human;
+    private Computer computer;
+    private Player currentPlayer;
     private String mode;
 
     Game(){
-        this.board = null;
         this.boardCli = null;
         this.mode = "normal";
     }
 
-    public void setBoard(int size){
-        this.board = new Board();
-        this.board.setTotalPositions(size);
-        this.board.setPositions();
+    public void config(String playerName){
+
+        this.setHuman(playerName);
+        this.setComputer();
+        this.setCurrentPlayer();
+
+        this.setBoardCli();
     }
 
-    public Board getBoard() {
-        return board;
-    }
-
-    public void setBoardCli(Board board){
-        this.boardCli = new BoardCLI(board);
+    public void setBoardCli(){
+        this.boardCli = new BoardCLI();
     }
 
     public BoardCLI getBoardCli() {
         return boardCli;
     }
 
-    public Player config(String playerName){
-        this.setBoard(100);
-        this.setBoardCli(this.getBoard());
-        this.getBoard().setShips();
-        this.getBoardCli().printBoard(this.getBoard(), this.getMode());
-        this.setPlayer(playerName);
-        return this.getPlayer();
+    public void setHuman(String name){
+        this.human = new Human(name);
     }
 
-    public void setPlayer(String name){
-        this.player = new Player(name);
+    public Human getHuman(){
+        return this.human;
     }
 
-    public Player getPlayer(){
-        return this.player;
+    public void setComputer(){
+        this.computer = new Computer("Computer");
     }
 
-    public boolean validMove(int position) {
-        return (this.getBoard().isEmpty(position));
-    }
-
-    public void makeMove(int move){
-        this.getBoard().addMarker(move);
-    }
-
-    public int convertPlayerMoveToInt(String move){
-        return this.getBoard().coordsToPosition(move);
-    }
-
-    public void printBoard(){
-        this.getBoardCli().printBoard(this.getBoard(), this.getMode());
-    }
-
-    public void printBoard(Board board, String str){
-        this.getBoardCli().printBoard(board, str);
-    }
-
-    public void printStatus(String name, int position){
-        String status = this.getBoard().checkForHit(position);
-        if(status.equals("hit")){
-            String shipType = this.getBoard().shipIsSunk(position);
-            if(shipType.equals("none")){
-                this.getBoardCli().printStatus(name, status);
-            } else {
-                this.getBoardCli().printSunkStatus(name, shipType);
-            }
-        } else {
-            this.getBoardCli().printStatus(name, status);
-        }
-    }
-
-    public boolean isOver(){
-        return this.getBoard().allShipsAreSunk();
+    public Computer getComputer(){
+        return this.computer;
     }
 
     public void setMode(String str){
@@ -98,5 +56,70 @@ public class Game {
 
     public String getMode(){
         return this.mode;
+    }
+
+    public void setCurrentPlayer(){
+        if(this.currentPlayer == this.getHuman()){
+            this.currentPlayer = this.getComputer();
+        }else if(this.currentPlayer == this.getComputer()){
+            this.currentPlayer = this.getHuman();
+        }else if(this.currentPlayer == null){
+            this.currentPlayer = this.getHuman();
+        }
+    }
+
+    public Player getCurrentPlayer(){
+        return this.currentPlayer;
+    }
+
+    public Board getCurrentBoard(){
+        return this.getCurrentPlayer().getBoard();
+    }
+
+    public void printBoard(){
+        if(this.getCurrentPlayer() == this.getHuman()){
+            this.setMode("dev");
+        } else {
+            this.setMode("off");
+        }
+        this.getBoardCli().printBoard(this.getCurrentBoard(), this.getMode());
+    }
+
+    public void printBoard(Board board, String str){
+        this.getBoardCli().printBoard(board, str);
+    }
+
+    public boolean validMove(int position) {
+        return (this.getCurrentBoard().isEmpty(position));
+    }
+
+    public int convertPlayerMoveToInt(String move){
+        return this.getCurrentBoard().coordsToPosition(move);
+    }
+
+    public void makeMove(int move){
+        this.getCurrentBoard().addMarker(move);
+    }
+
+    public void printStatus(String name, int position){
+        String status = this.getCurrentBoard().checkForHit(position);
+        if(status.equals("hit")){
+            String shipType = this.getCurrentBoard().shipIsSunk(position);
+            if(shipType.equals("none")){
+                this.getBoardCli().printStatus(name, status);
+            } else {
+                this.getBoardCli().printSunkStatus(name, shipType);
+            }
+        } else {
+            this.getBoardCli().printStatus(name, status);
+        }
+    }
+
+    public boolean isOver(){
+        return this.getCurrentBoard().allShipsAreSunk();
+    }
+
+    public int getComputerMove(){
+        return this.getComputer().getMove();
     }
 }

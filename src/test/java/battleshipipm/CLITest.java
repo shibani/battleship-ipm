@@ -1,22 +1,9 @@
 package battleshipipm;
 
-import org.jetbrains.annotations.NotNull;
 import org.junit.*;
 import org.junit.contrib.java.lang.system.ExpectedSystemExit;
-import org.junit.rules.ExpectedException;
-import org.junit.runner.RunWith;
-import org.junit.runners.Parameterized;
-import org.junit.runners.Parameterized.Parameters;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.Spy;
-import org.mockito.internal.matchers.Null;
-import org.mockito.junit.MockitoJUnitRunner;
-import org.mockito.stubbing.OngoingStubbing;
-import org.testng.annotations.AfterMethod;
-import org.testng.annotations.BeforeMethod;
-import org.testng.internal.Utils;
 
 import java.io.*;
 
@@ -56,19 +43,19 @@ public class CLITest {
         bo.flush();
         String inputLines = new String(bo.toByteArray());
 
-        assertTrue(inputLines.contains("Enter your Player Name:"));
+        assertTrue(inputLines.contains("Enter your Human Name:"));
     }
 
     @Test
     public void getPlayerNameInput() {
-        byte[] data = "Player 1".getBytes();
+        byte[] data = "Human 1".getBytes();
         InputStream input = new ByteArrayInputStream(data);
         System.setIn(input);
 
         CLI testCLI = new CLI();
         String testResult = testCLI.getPlayerNameInput();
 
-        assertEquals("Player 1", testResult);
+        assertEquals("Human 1", testResult);
     }
 
     @Test
@@ -101,13 +88,13 @@ public class CLITest {
         ByteArrayOutputStream bo = new ByteArrayOutputStream();
         System.setOut(new PrintStream(bo));
 
-        String str = "Player 1";
+        String str = "Human 1";
         CLI cli = new CLI();
-        cli.parsePlayerNameInput("Player 1");
+        cli.parsePlayerNameInput("Human 1");
 
         bo.flush();
         String inputLines = new String(bo.toByteArray());
-        assertTrue(inputLines.contains("You selected Player 1"));
+        assertTrue(inputLines.contains("You selected Human 1"));
     }
 
     @Test
@@ -132,8 +119,8 @@ public class CLITest {
         CLI spyCli = Mockito.spy(Cli);
 
         doNothing().when(spyCli).askForPlayerName();
-        doReturn("Player 1").when(spyCli).getPlayerNameInput();
-        doReturn("Player 1").when(spyCli).parsePlayerNameInput("Player 1");
+        doReturn("Human 1").when(spyCli).getPlayerNameInput();
+        doReturn("Human 1").when(spyCli).parsePlayerNameInput("Human 1");
         spyCli.getPlayerName();
 
         verify(spyCli, atLeast(1)).askForPlayerName();
@@ -145,8 +132,8 @@ public class CLITest {
         CLI spyCli = Mockito.spy(Cli);
 
         doNothing().when(spyCli).askForPlayerName();
-        doReturn("Player 1").when(spyCli).getPlayerNameInput();
-        doReturn("Player 1").when(spyCli).parsePlayerNameInput("Player 1");
+        doReturn("Human 1").when(spyCli).getPlayerNameInput();
+        doReturn("Human 1").when(spyCli).parsePlayerNameInput("Human 1");
 
         spyCli.getPlayerName();
 
@@ -158,13 +145,13 @@ public class CLITest {
         CLI Cli = new CLI();
         CLI spyCli = Mockito.spy(Cli);
 
-        byte[] data = "Player 1".getBytes();
+        byte[] data = "Human 1".getBytes();
         InputStream input = new ByteArrayInputStream(data);
         System.setIn(input);
 
         doNothing().when(spyCli).askForPlayerName();
-        doReturn("Player 1").when(spyCli).getPlayerNameInput();
-        doReturn("Player 1").when(spyCli).parsePlayerNameInput("Player 1");
+        doReturn("Human 1").when(spyCli).getPlayerNameInput();
+        doReturn("Human 1").when(spyCli).parsePlayerNameInput("Human 1");
         spyCli.getPlayerName();
 
         verify(spyCli, times(1)).parsePlayerNameInput(anyString());
@@ -201,7 +188,7 @@ public class CLITest {
     }
 
     @Mock
-    private Player mockedPlayer;
+    private Human mockedHuman;
 
     @Mock
     private CLI mockedCli;
@@ -307,6 +294,17 @@ public class CLITest {
     }
 
     @Test
+    public void parsePlayerMoveInputCanTurnOnDeveloperMode() {
+        String str = "dev";
+        CLI testCli = new CLI();
+        Game testGame = new Game();
+        testCli.setGame(testGame);
+        testGame.config("Player1");
+
+        assertEquals("Player1", testGame.getCurrentPlayer().getName());
+    }
+
+    @Test
     public void parsePlayerMoveInputCanTurnOnDeveloperMode1() throws IOException {
         ByteArrayOutputStream bo = new ByteArrayOutputStream();
         System.setOut(new PrintStream(bo));
@@ -315,9 +313,8 @@ public class CLITest {
         CLI testCli = new CLI();
         Game testGame = new Game();
         testCli.setGame(testGame);
-        testGame.setBoard(16);
-        Board testBoard = testGame.getBoard();
-        testGame.setBoardCli(testBoard);
+        testGame.config("Player1");
+
 
         testCli.parsePlayerMoveInput(str, "Player1");
 
@@ -328,7 +325,7 @@ public class CLITest {
     }
 
     @Test
-    public void parsePlayerMoveInputCanTurnOffDeveloperMode1() throws IOException {
+    public void parsePlayerMoveInputCanTurnOffDeveloperMode() throws IOException {
         ByteArrayOutputStream bo = new ByteArrayOutputStream();
         System.setOut(new PrintStream(bo));
 
@@ -345,7 +342,6 @@ public class CLITest {
         assertTrue(inputLines.contains("Switching off developer mode"));
     }
 
-
     @Test
     public void parsePlayerMoveInputCanTurnOffDeveloperMode2() {
         CLI testCli = new CLI();
@@ -358,8 +354,6 @@ public class CLITest {
         //mockedCli.parsePlayerMoveInput(str, "Player1");
         assertEquals("normal", testCli.getGame().getMode());
     }
-
-
 
     @Test
     public void parsePlayerMoveInputChecksIfArgIsEmptyString() throws IOException {
@@ -521,13 +515,13 @@ public class CLITest {
         ByteArrayOutputStream bo = new ByteArrayOutputStream();
         System.setOut(new PrintStream(bo));
 
-        Player testPlayer = new Player("Player 2");
+        Human testHuman = new Human("Human 2");
         CLI testCLI = new CLI();
-        testCLI.endGame(testPlayer);
+        testCLI.endGame(testHuman);
 
         bo.flush();
         String inputLines = new String(bo.toByteArray());
-        assertTrue(inputLines.contains("You won, Player 2!"));
+        assertTrue(inputLines.contains("You won, Human 2!"));
     }
 
     @Test
@@ -537,5 +531,18 @@ public class CLITest {
         testCli.setGame(testGame);
 
         assertEquals(testGame, testCli.getGame());
+    }
+
+    @Test
+    public void getComputerMove() throws IOException {
+        ByteArrayOutputStream bo = new ByteArrayOutputStream();
+        System.setOut(new PrintStream(bo));
+
+        CLI testCLI = new CLI();
+        testCLI.getComputerMove("Computer");
+
+        bo.flush();
+        String inputLines = new String(bo.toByteArray());
+        assertTrue(inputLines.contains("Computer is generating a move..."));
     }
 }

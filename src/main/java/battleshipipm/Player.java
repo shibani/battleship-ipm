@@ -1,14 +1,12 @@
 package battleshipipm;
 
-public class Player {
+abstract class Player {
 
-    private String name;
+    public abstract String getName();
 
-    Player(String name){
-        this.name = name;
-    }
+    public abstract Board getBoard();
 
-    public String getName(){
-        return this.name;
-    }
+    public abstract void setType(String type);
+
+    public abstract String getType();
 }

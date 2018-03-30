@@ -1,7 +1,5 @@
 package battleshipipm;
 
-import java.io.IOException;
-
 public class App {
 
     private CLI cli;
@@ -13,26 +11,27 @@ public class App {
     }
 
     public void playGame() {
-        Player player = this.setup();
+        this.setup();
 
         while(!this.gameOver()){
-            this.gameLoop(player);
+            this.gameLoop(this.getCurrentPlayer());
+            this.game.setCurrentPlayer();
         }
         if(this.gameOver()){
-            this.endGame(player);
+            this.endGame(this.getHuman());
         }
     }
 
-    public Player setup() {
+    public void setup() {
         this.cli.welcome();
         this.cli.setGame(game);
         String playerName = this.cli.getPlayerName();
-        return this.game.config(playerName);
+        this.game.config(playerName);
     }
 
     public void gameLoop(Player player) {
-        String moveString = this.cli.getPlayerMove(player.getName());
-        int move = this.game.convertPlayerMoveToInt(moveString);
+        this.game.printBoard();
+        int move = this.getMove(player);
         if(this.game.validMove(move)){
             this.game.makeMove(move);
             this.game.printBoard();
@@ -47,7 +46,29 @@ public class App {
         return this.game.isOver();
     }
 
-    public void endGame(Player player){
-        this.cli.endGame(player);
+    public void endGame(Human human){
+        this.cli.endGame(human);
+    }
+
+    public Human getHuman(){
+        return this.game.getHuman();
+    }
+
+    public Computer getComputer(){
+        return this.game.getComputer();
+    }
+
+    public Player getCurrentPlayer(){
+        return this.game.getCurrentPlayer();
+    }
+
+    public int getMove(Player player){
+        if(player == this.getHuman()){
+            String moveString = this.cli.getPlayerMove(player.getName());
+            return this.game.convertPlayerMoveToInt(moveString);
+        } else {
+            this.cli.getComputerMove(player.getName());
+            return this.game.getComputerMove();
+        }
     }
 }

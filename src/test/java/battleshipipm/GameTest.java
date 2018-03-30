@@ -1,18 +1,17 @@
 package battleshipipm;
 
-import org.junit.After;
+import org.hamcrest.core.IsNull;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
-import org.mockito.ArgumentCaptor;
+import org.mockito.Answers;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.internal.matchers.InstanceOf;
-import org.mockito.invocation.InvocationOnMock;
-import org.mockito.stubbing.Answer;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.PrintStream;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -29,34 +28,70 @@ import static org.mockito.MockitoAnnotations.initMocks;
 
 public class GameTest {
 
-    @Test
-    public void setBoard() {
-        final Game testGame = new Game();
-        testGame.setBoard(10);
+    @Mock(answer = Answers.RETURNS_DEEP_STUBS)
+    private Board mockedBoard;
 
-        assertThat(testGame.getBoard(), instanceOf(Board.class));
+    @Mock
+    private BoardCLI mockedBoardCli;
+
+    @Mock
+    private Human mockedHuman;
+
+    @Mock
+    private Computer mockedComputer;
+
+    @Mock
+    private Player mockedPlayer;
+
+    @InjectMocks
+    private Game mockedGame;
+
+    @Before
+    public void beforeSetup() {
+        initMocks(this);
     }
 
     @Test
-    public void getBoard() throws NoSuchFieldException, IllegalAccessException {
-        final Game testGame = new Game();
-        final Board testBoard = new Board();
-        testGame.setBoard(10);
+    public void config() {
+        Game testGame = new Game();
+        testGame.config("Player1");
+        assertEquals(100, testGame.getCurrentBoard().getTotalPositions());
+    }
 
-        final Field field = testGame.getClass().getDeclaredField("board");
-        field.setAccessible(true);
-        field.set(testGame, testBoard);
+    @Test
+    public void configSetsThePlayer() {
+        Game testGame = new Game();
+        Game spyGame = Mockito.spy(testGame);
 
-        final Board result = testGame.getBoard();
+        spyGame.config("Player1");
 
-        assertEquals(testBoard, result);
+        verify(spyGame, times(1)).setHuman("Player1");
+    }
+
+    @Test
+    public void configSetsTheOpponent() {
+        Game testGame = new Game();
+        Game spyGame = Mockito.spy(testGame);
+
+        spyGame.config("Player1");
+
+        verify(spyGame, times(1)).setComputer();
+    }
+
+    @Test
+    public void configSetsTheBoardCLI() {
+        Game testGame = new Game();
+        Game spyGame = Mockito.spy(testGame);
+
+        spyGame.config("Player1");
+
+        verify(spyGame, times(1)).setBoardCli();
     }
 
     @Test
     public void setBoardCli() {
         final Game testGame = new Game();
-        Board testBoard = new Board();
-        testGame.setBoardCli(testBoard);
+        testGame.config("Player1");
 
         assertThat(testGame.getBoardCli(), instanceOf(BoardCLI.class));
     }
@@ -64,8 +99,7 @@ public class GameTest {
     @Test
     public void getBoardCli() throws NoSuchFieldException, IllegalAccessException {
         final Game testGame = new Game();
-        Board testBoard = new Board();
-        final BoardCLI testBoardCLI = new BoardCLI(testBoard);
+        final BoardCLI testBoardCLI = new BoardCLI();
 
         final Field field = testGame.getClass().getDeclaredField("boardCli");
         field.setAccessible(true);
@@ -77,157 +111,42 @@ public class GameTest {
     }
 
     @Test
-    public void config() {
+    public void setHuman() throws NoSuchFieldException, IllegalAccessException {
         Game testGame = new Game();
         testGame.config("Player1");
-        assertEquals(100, testGame.getBoard().getTotalPositions());
-    }
-
-    @Test
-    public void setPlayer() throws NoSuchFieldException, IllegalAccessException {
-        Game testGame = new Game();
-        testGame.config("Player1");
-        final Field field = testGame.getClass().getDeclaredField("player");
+        final Field field = testGame.getClass().getDeclaredField("human");
         field.setAccessible(true);
 
-        assertThat(field.get(testGame), instanceOf(Player.class));
+        assertThat(field.get(testGame), instanceOf(Human.class));
     }
 
     @Test
-    public void getPlayer() throws NoSuchFieldException, IllegalAccessException {
+    public void getHuman() throws NoSuchFieldException, IllegalAccessException {
         final Game testGame = new Game();
-        final Player testPlayer = new Player("Player2");
-        final Field field = testGame.getClass().getDeclaredField("player");
+        final Human testHuman = new Human("Player2");
+        final Field field = testGame.getClass().getDeclaredField("human");
         field.setAccessible(true);
-        field.set(testGame, testPlayer);
+        field.set(testGame, testHuman);
 
-        final Player result = testGame.getPlayer();
+        final Human result = testGame.getHuman();
 
-        assertEquals(testPlayer, result);
-    }
-
-    @Mock
-    private Board mockedBoard;
-    @Mock
-    private BoardCLI mockedBoardCli;
-
-    @InjectMocks
-    private Game mockedGame;
-
-    @Before
-    public void beforeSetup() {
-        initMocks(this);
+        assertEquals(testHuman, result);
     }
 
     @Test
-    public void validMove() {
-        String[] intArray = new String[100];
-        Arrays.fill(intArray, " ");
-        ArrayList<String> positions = new ArrayList<>(
-                Arrays.asList(intArray));
-        when(mockedBoard.getTotalPositions()).thenReturn(100);
-        when(mockedBoard.getPositions()).thenReturn(positions);
-        when(mockedBoard.coordsToPosition(anyString())).thenReturn(33);
-        when(mockedBoard.isEmpty(anyInt())).thenReturn(true);
-        mockedGame.validMove(30);
+    public void setComputer() {
+        final Game testGame = new Game();
+        testGame.setComputer();
 
-        verify(mockedBoard, times(1)).isEmpty(anyInt());
+        assertThat(testGame.getComputer(), instanceOf(Computer.class));
     }
 
     @Test
-    public void convertPlayerMoveToInt() {
-        String[] intArray = new String[100];
-        Arrays.fill(intArray, " ");
-        ArrayList<String> positions = new ArrayList<>(
-                Arrays.asList(intArray));
-        when(mockedBoard.getTotalPositions()).thenReturn(100);
-        when(mockedBoard.getPositions()).thenReturn(positions);
-        when(mockedBoard.coordsToPosition(anyString())).thenReturn(33);
-        when(mockedBoard.isEmpty(anyInt())).thenReturn(true);
-        mockedGame.convertPlayerMoveToInt("d3");
+    public void getComputer() {
+        final Game testGame = new Game();
+        testGame.setComputer();
 
-        verify(mockedBoard, times(1)).coordsToPosition(anyString());
-    }
-
-    @Test
-    public void makeMove() {
-        doNothing().when(mockedBoard).addMarker(30);
-        when(mockedBoard.checkForHit(30)).thenReturn("hit");
-        mockedGame.makeMove(anyInt());
-
-        verify(mockedBoard, times(1)).addMarker(anyInt());
-    }
-
-    @Test
-    public void printBoardNoArgs() {
-        doNothing().when(mockedBoardCli).printBoard(mockedBoard, mockedGame.getMode());
-        mockedGame.printBoard();
-
-        verify(mockedBoardCli, times(1)).printBoard(mockedBoard, mockedGame.getMode());
-    }
-
-    @Test
-    public void printBoardOverloaded() {
-        doNothing().when(mockedBoardCli).printBoard(mockedBoard, mockedGame.getMode());
-        mockedGame.printBoard(mockedBoard, mockedGame.getMode());
-
-        verify(mockedBoardCli, times(1)).printBoard(mockedBoard, mockedGame.getMode());
-    }
-
-    @Test
-    public void printStatus() {
-        doNothing().when(mockedBoardCli).printStatus("Player1", "miss");
-        when(mockedGame.getBoard().checkForHit(30)).thenReturn("hit");
-        when(mockedBoard.shipIsSunk(30)).thenReturn("none");
-        mockedGame.printStatus("Player1", 30);
-
-        verify(mockedBoardCli, times(1)).printStatus("Player1", "hit");
-    }
-
-    @Test
-    public void printStatus1() {
-        doNothing().when(mockedBoardCli).printStatus(anyString(), anyString());
-        when(mockedGame.getBoard().checkForHit(30)).thenReturn("hit");
-        when(mockedBoard.shipIsSunk(30)).thenReturn("P");
-        mockedGame.printStatus("Player1", 30);
-
-        verify(mockedBoard, times(1)).shipIsSunk(30);
-    }
-
-    @Test
-    public void printStatus2() {
-        doNothing().when(mockedBoardCli).printStatus(anyString(), anyString());
-        when(mockedGame.getBoard().checkForHit(30)).thenReturn("hit");
-        when(mockedBoard.shipIsSunk(30)).thenReturn("P");
-        mockedGame.printStatus("Player1", 30);
-
-        verify(mockedBoardCli, times(1)).printSunkStatus(anyString(), anyString());
-    }
-
-    @Test
-    public void printStatus3() {
-        doNothing().when(mockedBoardCli).printStatus(anyString(), anyString());
-        when(mockedGame.getBoard().checkForHit(30)).thenReturn("miss");
-        when(mockedBoard.shipIsSunk(30)).thenReturn("P");
-        mockedGame.printStatus("Player1", 30);
-
-        verify(mockedBoardCli, times(1)).printStatus("Player1", "miss");
-    }
-
-    @Ignore
-    public void isOver() {
-        when(mockedBoard.isFull()).thenReturn(true);
-        boolean result = mockedGame.isOver();
-
-        assertTrue(result);
-    }
-
-    @Test
-    public void allShipsAreSunk() {
-        when(mockedBoard.allShipsAreSunk()).thenReturn(true);
-        boolean result = mockedGame.isOver();
-
-        assertTrue(result);
+        assertEquals("Computer", testGame.getComputer().getName());
     }
 
     @Test
@@ -259,5 +178,219 @@ public class GameTest {
         String result = testGame.getMode();
 
         assertThat(testGame.getMode(), instanceOf(String.class));
+    }
+
+    @Test
+    public void setCurrentPlayerSetsTheFirstPlayerIfItIsNull() {
+        final Game testGame = new Game();
+        testGame.config("Player1");
+
+        assertEquals("Player1", testGame.getCurrentPlayer().getName());
+    }
+
+    @Test
+    public void setCurrentPlayerCanSwitchThePlayer() {
+        final Game testGame = new Game();
+        testGame.config("Player1");
+        testGame.setCurrentPlayer();
+
+        assertEquals("Computer", testGame.getCurrentPlayer().getName());
+    }
+
+    @Test
+    public void getCurrentPlayer() throws NoSuchFieldException, IllegalAccessException {
+        final Game testGame = new Game();
+        final Human testHuman = new Human("Computer");
+
+        final Field field = testGame.getClass().getDeclaredField("currentPlayer");
+        field.setAccessible(true);
+        field.set(testGame, testHuman);
+
+        final Player resultPlayer = testGame.getCurrentPlayer();
+
+        assertEquals("Computer", resultPlayer.getName());
+    }
+
+    @Test
+    public void getCurrentBoard(){
+        final Game testGame = new Game();
+        testGame.config("Player1");
+
+        assertEquals(testGame.getHuman().getBoard(), testGame.getCurrentPlayer().getBoard());
+    }
+
+    @Test
+    public void printBoardNoArgs() {
+        when(mockedGame.getCurrentBoard()).thenReturn(mockedBoard);
+        doNothing().when(mockedBoardCli).printBoard(mockedBoard, mockedGame.getMode());
+        mockedGame.printBoard();
+
+        verify(mockedBoardCli, times(1)).printBoard(mockedBoard, mockedGame.getMode());
+    }
+
+    @Test
+    public void printBoardOverloaded() {
+        doNothing().when(mockedBoardCli).printBoard(mockedBoard, mockedGame.getMode());
+        mockedGame.printBoard(mockedBoard, mockedGame.getMode());
+
+        verify(mockedBoardCli, times(1)).printBoard(mockedBoard, mockedGame.getMode());
+    }
+
+    @Test
+    public void validMove() {
+        String[] intArray = new String[100];
+        Arrays.fill(intArray, " ");
+        ArrayList<String> positions = new ArrayList<>(
+                Arrays.asList(intArray));
+
+        when(mockedBoard.getTotalPositions()).thenReturn(100);
+        when(mockedBoard.getPositions()).thenReturn(positions);
+        when(mockedGame.getCurrentBoard()).thenReturn(mockedBoard);
+        when(mockedBoard.coordsToPosition(anyString())).thenReturn(33);
+        when(mockedBoard.isEmpty(anyInt())).thenReturn(true);
+
+        mockedGame.validMove(30);
+
+        verify(mockedBoard, times(1)).isEmpty(anyInt());
+    }
+
+    @Test
+    public void convertPlayerMoveToInt() {
+        String[] intArray = new String[100];
+        Arrays.fill(intArray, " ");
+        ArrayList<String> positions = new ArrayList<>(
+                Arrays.asList(intArray));
+        when(mockedBoard.getTotalPositions()).thenReturn(100);
+        when(mockedBoard.getPositions()).thenReturn(positions);
+        when(mockedGame.getCurrentBoard()).thenReturn(mockedBoard);
+        when(mockedBoard.coordsToPosition(anyString())).thenReturn(33);
+        when(mockedBoard.isEmpty(anyInt())).thenReturn(true);
+        mockedGame.convertPlayerMoveToInt("d3");
+
+        verify(mockedBoard, times(1)).coordsToPosition(anyString());
+    }
+
+    @Test
+    public void makeMove() {
+        doNothing().when(mockedBoard).addMarker(30);
+        when(mockedGame.getCurrentBoard()).thenReturn(mockedBoard);
+        when(mockedBoard.checkForHit(30)).thenReturn("hit");
+        mockedGame.makeMove(30);
+
+        verify(mockedBoard, times(1)).addMarker(30);
+    }
+
+    @Test
+    public void printStatus() {
+        doNothing().when(mockedBoardCli).printStatus("Player1", "miss");
+        when(mockedGame.getCurrentBoard()).thenReturn(mockedBoard);
+        when(mockedGame.getCurrentBoard().checkForHit(30)).thenReturn("hit");
+        when(mockedBoard.shipIsSunk(30)).thenReturn("none");
+        mockedGame.printStatus("Player1", 30);
+
+        verify(mockedBoardCli, times(1)).printStatus("Player1", "hit");
+    }
+
+    @Test
+    public void printStatus1() {
+        doNothing().when(mockedBoardCli).printStatus(anyString(), anyString());
+        when(mockedGame.getCurrentBoard()).thenReturn(mockedBoard);
+        when(mockedGame.getCurrentBoard().checkForHit(30)).thenReturn("hit");
+        when(mockedBoard.shipIsSunk(30)).thenReturn("P");
+        mockedGame.printStatus("Player1", 30);
+
+        verify(mockedBoard, times(1)).shipIsSunk(30);
+    }
+
+    @Test
+    public void printStatus2() {
+        doNothing().when(mockedBoardCli).printStatus(anyString(), anyString());
+        when(mockedGame.getCurrentBoard()).thenReturn(mockedBoard);
+        when(mockedGame.getCurrentBoard().checkForHit(30)).thenReturn("hit");
+        when(mockedBoard.shipIsSunk(30)).thenReturn("P");
+        mockedGame.printStatus("Player1", 30);
+
+        verify(mockedBoardCli, times(1)).printSunkStatus(anyString(), anyString());
+    }
+
+    @Test
+    public void printStatus3() {
+        doNothing().when(mockedBoardCli).printStatus(anyString(), anyString());
+        when(mockedGame.getCurrentBoard()).thenReturn(mockedBoard);
+        when(mockedGame.getCurrentBoard().checkForHit(30)).thenReturn("miss");
+        when(mockedBoard.shipIsSunk(30)).thenReturn("P");
+        mockedGame.printStatus("Player1", 30);
+
+        verify(mockedBoardCli, times(1)).printStatus("Player1", "miss");
+    }
+
+    @Ignore
+    public void isOver() {
+        when(mockedBoard.isFull()).thenReturn(true);
+        boolean result = mockedGame.isOver();
+
+        assertTrue(result);
+    }
+
+    @Test
+    public void allShipsAreSunk() {
+        when(mockedGame.getCurrentBoard()).thenReturn(mockedBoard);
+        when(mockedBoard.allShipsAreSunk()).thenReturn(true);
+        boolean result = mockedGame.isOver();
+
+        assertTrue(result);
+    }
+
+    @Test
+    public void printBoardPrintsTheShipsIfUserIsHuman() throws IOException {
+        final Game testGame = new Game();
+        testGame.config("Player1");
+
+        ByteArrayOutputStream bo = new ByteArrayOutputStream();
+        System.setOut(new PrintStream(bo));
+
+        testGame.printBoard();
+
+        bo.flush();
+        String inputLines = new String(bo.toByteArray());
+
+        assertTrue(inputLines.contains("|  P  |"));
+        assertTrue(inputLines.contains("|  A  |"));
+        assertTrue(inputLines.contains("|  C  |"));
+        assertTrue(inputLines.contains("|  D  |"));
+        assertTrue(inputLines.contains("|  S  |"));
+    }
+
+    @Test
+    public void printBoardDoesNotPrintShipsIfUserIsComputer() throws IOException {
+        final Game testGame = new Game();
+        testGame.config("Player1");
+        testGame.setCurrentPlayer();
+
+        ByteArrayOutputStream bo = new ByteArrayOutputStream();
+        System.setOut(new PrintStream(bo));
+
+        testGame.printBoard();
+
+        bo.flush();
+        String inputLines = new String(bo.toByteArray());
+
+        assertFalse(inputLines.contains("|  P  |"));
+        assertFalse(inputLines.contains("|  A  |"));
+        assertFalse(inputLines.contains("|  C  |"));
+        assertFalse(inputLines.contains("|  D  |"));
+        assertFalse(inputLines.contains("|  S  |"));
+    }
+
+    @Test
+    public void getComputerMove(){
+        Game testGame = new Game();
+        Game spyGame = Mockito.spy(testGame);
+
+        when(spyGame.getComputer()).thenReturn(mockedComputer);
+
+        spyGame.getComputerMove();
+
+        verify(spyGame, times(1)).getComputer();
     }
 }
